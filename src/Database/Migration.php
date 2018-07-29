@@ -15,13 +15,14 @@ $tables = [
 		product_id INT NOT NULL,
 		section_id INT NOT NULL,
 		FOREIGN KEY (product_id) REFERENCES product(id),
-		FOREIGN KEY (product_id) REFERENCES section(id)
+		FOREIGN KEY (section_id) REFERENCES section(id)
 	)",
 
 	'section' => "CREATE TABLE section(
 		id INT AUTO_INCREMENT PRIMARY KEY,
 		name VARCHAR(100) NOT NULL,
-		parent_id INT DEFAULT NULL
+		lft INT NOT NULL,
+		rgt INT NOT NULL
 	) ENGINE=InnoDB CHARACTER SET=utf8",
 
 	'product' => "CREATE TABLE product(

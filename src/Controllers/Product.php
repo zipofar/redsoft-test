@@ -13,6 +13,7 @@ class Product
 		$id = $attributes['id'];
 		$product = new MProduct();
 		$res = $product->getById($id);
+		var_dump($res);
 		return new Response('Hello, World!');
 	}
 
@@ -20,21 +21,29 @@ class Product
 		$name = $attributes['name'];
 		$product = new MProduct();
 		$res = $product->getBySubStrName($name);
+		var_dump($res);
 		return new Response('Hello, World!');
 	}
 
 	public function getByBrand(Request $request, $attributes) {
-		var_dump($attributes);
+		$name = $attributes['name'];
+		$product = new MProduct();
+		$res = $product->getByBrand($name);
+		var_dump($res);
 		return new Response('Hello, World!');
 	}
 
 	public function getBySection(Request $request, $attributes) {
-		var_dump($attributes);
-		return new Response('Hello, World!');
+		$name = $attributes['name'];
+		$product = new MProduct();
+		$res = $product->getBySection($name);
+		var_dump($res);
 	}
 
 	public function getBySections(Request $request, $attributes) {
-		var_dump($attributes);
-		return new Response('Hello, World!');
+		$name = $attributes['name'];
+		$product = new MProduct();
+		$res = $product->getBySections($name);
+		var_dump($res);
 	}
 }

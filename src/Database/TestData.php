@@ -9,53 +9,48 @@ $dotenv = new Dotenv(getcwd()."/../");
 $dotenv->load();
 $pdo = Db::getInstance();
 
-$n = null;
-
 $sections = [
-	1 => ['Electronics', $n],
-	2 => ['Tv & Video', 1],
-	3 => ['DTV', 2],
-	4 => ['Converters', 2],
-	5 => ['Projectors', 2],
-	6 => ['DLP', 5],
-	7 => ['LCD', 5],
-	8 => ['Home & Audio', 1],
-	9 => ['Cell Phones', 1],
-	10 => ['Headphones', 1],
-	11 => ['Computers', $n],
-	12 => ['Monitors', 11],
-	13 => ['LCD', 12],
-	14 => ['LED', 12],
-	15 => ['OLED', 12],
+	1 => ['Food', 1, 30],
+	2 => ['Vegetable', 2, 15],
+	3 => ['Red', 3, 8],
+	4 => ['Sour', 4, 5],
+	5 => ['Sweet', 6, 7],
+	6 => ['Green', 9, 14],
+	7 => ['Sour', 10, 11],
+	8 => ['Sweet', 12, 13],
+	9 => ['Fruit', 16, 29],
+	10 => ['Red', 17, 22],
+	11 => ['Sour', 18, 19],
+	12 => ['Sweet', 20, 21],
+	13 => ['Green', 23, 28],
+	14 => ['Sour', 24, 25],
+	15 => ['Sweet', 26, 27],
+
 ];
 
 $products = [
-	1 => ['Monitor LCD', '1', '99.99', 'Benq'],
-	2 => ['Monitor LED', '1', '100.50', 'Samsung'],
-	3 => ['Monitor OLED', '1', '120.30', 'Sony'],
-	4 => ['Cell phone 1', '1', '650.05', 'Apple'],
-	5 => ['Cell phone 2', '1', '650.05', 'Motorola'],
-	6 => ['Cinema 4000', '1', '450.00', 'Epson'],
-	7 => ['Cinema 1000', '1', '150.00', 'Epson'],
-	8 => ['Cinema 2000', '1', '170.00', 'ViewSonic'],
-	9 => ['Converter 1', '1', '200.00', 'ViewSonic'],
-	10 => ['Converter 2', '1', '300.00', 'Samsung'],
+	1 => ['FoodVegRedSour', '1', '1.99', 'Russia Kolhoz'],
+	2 => ['FoodVegRedSweet', '1', '1.50', 'Gruzin'],
+	3 => ['FoodVegGreenSour', '1', '12.30', 'Russia Kolhoz'],
+	4 => ['FoodVegGreenSweet', '1', '50.05', 'Country'],
+	5 => ['FoodFruitRedSour', '1', '15.05', 'Dacha'],
+	6 => ['FoodFruitRedSweet', '1', '5.00', 'Polsky'],
+	7 => ['FoodFruitGreenSour', '1', '12.00', 'Turkish'],
+	8 => ['FoodFruitGreenSweet', '1', '17.00', 'Petrovna'],
 ];
 
 $productsection =  [
-	1 => [1, 12],
-	2 => [2, 12],
-	3 => [3, 12],
-	4 => [4, 9],
-	5 => [5, 9],
-	6 => [6, 6],
-	7 => [7, 7],
-	8 => [8, 7],
-	9 => [9, 4],
-	10 => [10, 4],
+	1 => [1, 4],
+	2 => [2, 5],
+	3 => [3, 7],
+	4 => [4, 8],
+	5 => [5, 11],
+	6 => [6, 12],
+	7 => [7, 14],
+	8 => [8, 15],
 ];
 
-$stm1 = $pdo->prepare("INSERT INTO section (name, parent_id) VALUES (?, ?)");
+$stm1 = $pdo->prepare("INSERT INTO section (name, lft, rgt) VALUES (?, ?, ?)");
 foreach ($sections as $item) {
 	$stm1->execute($item);
 }
