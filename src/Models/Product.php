@@ -83,31 +83,31 @@ class Product extends Model
 		return $data;
 	}
 
-	private function getLastSubSectionIds($data, $searchHierarhy)
+	private function getLastSubSectionIds($origTree, $userTree)
 	{
 
-		if (strtolower($data[0]['name']) !== $searchHierarhy[0]) {
+		if (strtolower($origTree[0]['name']) !== $userTree[0]) {
 			return null;
 		}
 
-		$tree[] = $data[0];
+		$resultTree[] = $origTree[0];
 		$i = 1;
 
-		foreach ($data as $item) {
+		foreach ($origTree as $origNode) {
 
-			$dataName = strtolower($item['name']);
+			$nameNodeOrigTree = strtolower($origNode['name']);
 
-			if ($dataName === $searchHierarhy[$i]
-				&& $item['lft'] > $tree[$i - 1]['lft']
-				&& $item['rgt'] < $tree[$i - 1]['rgt']
-				&& $item['level'] == $i
+			if ($nameNodeOrigTree === $userTree[$i]
+				&& $origNode['lft'] > $resultTree[$i - 1]['lft']
+				&& $origNode['rgt'] < $resultTree[$i - 1]['rgt']
+				&& $origNode['level'] == $i
 			) {
-				$tree[$i] = $item;
+				$resultTree[$i] = $origNode;
 				$i += 1;
 			}
 
-			if (count($searchHierarhy) === $i) {
-				return $tree;
+			if (count($userTree) === $i) {
+				return $resultTree;
 			}
 
 		}
