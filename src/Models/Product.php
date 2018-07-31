@@ -73,35 +73,45 @@ class Product extends Model
 	{
 		$arrSections = explode('>>', $sections);
 
-		$sql = 'SELECT DISTINCT s2.id, s2.name, s2.lft, s2.rgt FROM section AS s1, section AS s2
-  				WHERE s1.lft BETWEEN s2.lft AND s2.rgt 
-  				AND s1.name = ? ORDER BY s2.lft';
+		$sql = 'select s1.id, s1.name, s1.lft, s1.rgt, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
+				WHERE s1.lft BETWEEN s2.lft AND s2.rgt GROUP BY s1.id ORDER BY s1.lft;';
 
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([$arrSections[count($arrSections) - 1]]);
+		$stmt->execute([]);
 		$data = $stmt->fetchAll();
-		$this->getLastSubSectionIds($data, $arrSections);
+		$data = $this->getLastSubSectionIds($data, $arrSections);
 		return $data;
 	}
 
-	private function getLastSubSectionIds($data, $needle)
+	private function getLastSubSectionIds($data, $searchHierarhy)
 	{
-		function tree($data, $acc) {
-			if (count($data) === 0) {
-				return $acc;
-			}
-			$firstEl = array_shift($data);
 
-			if (count($acc) === 0) {
-				$acc[] = $firstEl;
-			} elseif ($firstEl['lft'] > $acc[count($acc) - 1]['lft'] & $firstEl['lft'] > $acc[count($acc) - 1]['rgt']) {
-
-			}
-			$acc = tree($data, $acc);
-			return $acc;
+		if (strtolower($data[0]['name']) !== $searchHierarhy[0]) {
+			return null;
 		}
 
-		$res = tree($data, []);
-		var_dump($res);
+		$tree[] = $data[0];
+		$i = 1;
+
+		foreach ($data as $item) {
+
+			$dataName = strtolower($item['name']);
+
+			if ($dataName === $searchHierarhy[$i]
+				&& $item['lft'] > $tree[$i - 1]['lft']
+				&& $item['rgt'] < $tree[$i - 1]['rgt']
+				&& $item['level'] == $i
+			) {
+				$tree[$i] = $item;
+				$i += 1;
+			}
+
+			if (count($searchHierarhy) === $i) {
+				return $tree;
+			}
+
+		}
+
+		return null;
 	}
 }
