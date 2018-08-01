@@ -1,6 +1,7 @@
 <?php
 
 namespace Zipofar;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -11,42 +12,38 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class Core
 {
-	protected $routes;
+    protected $routes;
 
-	public function __construct()
-	{
-		$this->routes = new RouteCollection();
-	}
+    public function __construct()
+    {
+        $this->routes = new RouteCollection();
+    }
 
-	public function handle(Request $request)
-	{
-		$path = $request->getPathInfo();
+    public function handle(Request $request)
+    {
+        $path = $request->getPathInfo();
 
-		$context = new RequestContext();
-		$context->fromRequest($request);
+        $context = new RequestContext();
+        $context->fromRequest($request);
 
-		try {
+        try {
+            $matcher = new UrlMatcher($this->routes, $context);
+            $attributes = $matcher->match($path);
 
-			$matcher = new UrlMatcher($this->routes, $context);
-			$attributes = $matcher->match($path);
+            $controller = new $attributes['_controller']['class']();
+            $response = call_user_func([$controller, $attributes['_controller']['method']], $request, $attributes);
+        } catch (ResourceNotFoundException $e) {
+            $response = new Response('{"meta":{"error":"wrong uri"}}', Response::HTTP_NOT_FOUND);
+        }
 
-			$controller = new $attributes['_controller']['class']();
-			$response = call_user_func([$controller, $attributes['_controller']['method']], $request, $attributes);
+        return $response;
+    }
 
-		} catch (ResourceNotFoundException $e) {
-
-			$response = new Response('Not Found', Response::HTTP_NOT_FOUND);
-
-		}
-
-		return $response;
-	}
-
-	public function addRoute($route, $controller, $method)
-	{
-		$this->routes->add($route, new Route(
-			$route,
-			['_controller' => ['class' => $controller, 'method' => $method]]
-		));
-	}
+    public function addRoute($route, $controller, $method)
+    {
+        $this->routes->add($route, new Route(
+            $route,
+            ['_controller' => ['class' => $controller, 'method' => $method]]
+        ));
+    }
 }

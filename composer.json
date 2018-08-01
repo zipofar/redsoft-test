@@ -10,5 +10,13 @@
         "classmap": [
             "src/"
         ]
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.3"
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs src/",
+        "phpcbf": "vendor/bin/phpcbf src/",
+        "phpunit": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests/"
     }
 }

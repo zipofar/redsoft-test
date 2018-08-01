@@ -2,48 +2,75 @@
 
 namespace Zipofar;
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\Product as MProduct;
 
 class Product
 {
-	public function getById(Request $request, $attributes) {
-		$id = $attributes['id'];
-		$product = new MProduct();
-		$res = $product->getById($id);
-		var_dump($res);
-		return new Response('Hello, World!');
-	}
+    private $product;
 
-	public function getBySubStrName(Request $request, $attributes) {
-		$name = $attributes['name'];
-		$product = new MProduct();
-		$res = $product->getBySubStrName($name);
-		var_dump($res);
-		return new Response('Hello, World!');
-	}
+    public function __construct()
+    {
+        $this->product = new MProduct();
+    }
 
-	public function getByBrand(Request $request, $attributes) {
-		$name = $attributes['name'];
-		$product = new MProduct();
-		$res = $product->getByBrand($name);
-		var_dump($res);
-		return new Response('Hello, World!');
-	}
+    private function buildResponse($response)
+    {
+        $newResponse = [
+            'meta' => [
+                'number_of_records' => count($response),
+            ],
+            'payload' => $response,
+        ];
 
-	public function getBySection(Request $request, $attributes) {
-		$name = $attributes['name'];
-		$product = new MProduct();
-		$res = $product->getBySection($name);
-		var_dump($res);
-	}
+        if (empty($response)) {
 
-	public function getBySections(Request $request, $attributes) {
-		$name = $attributes['name'];
-		$product = new MProduct();
-		$res = $product->getBySections($name);
-		var_dump($res);
-	}
+            $newResponse['payload'] = '{}';
+
+            return new Response(json_encode($newResponse), Response::HTTP_NOT_FOUND, ['content-type' => 'application/json']);
+        }
+
+        return new Response(json_encode($newResponse), Response::HTTP_OK, ['content-type' => 'application/json']);
+    }
+
+    public function getById(Request $request, $attributes)
+    {
+        $id = $attributes['id'];
+        $res = $this->product->getById($id);
+
+        return $this->buildResponse($res);
+    }
+
+    public function getBySubStrName(Request $request, $attributes)
+    {
+        $name = $attributes['name'];
+        $res = $this->product->getBySubStrName($name);
+
+        return $this->buildResponse($res);
+    }
+
+    public function getByBrand(Request $request, $attributes)
+    {
+        $name = $attributes['name'];
+        $res = $this->product->getByBrand($name);
+
+        return $this->buildResponse($res);
+    }
+
+    public function getBySection(Request $request, $attributes)
+    {
+        $name = $attributes['name'];
+        $res = $this->product->getBySection($name);
+
+        return $this->buildResponse($res);
+    }
+
+    public function getBySections(Request $request, $attributes)
+    {
+        $name = $attributes['name'];
+        $res = $this->product->getBySections($name);
+
+        return $this->buildResponse($res);
+    }
 }
