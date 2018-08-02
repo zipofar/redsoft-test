@@ -45,7 +45,9 @@ class Product
     public function getBySubStrName(Request $request, $attributes)
     {
         $name = $attributes['name'];
-        $res = $this->product->getBySubStrName($name);
+        $offset = intval($attributes['offset']);
+
+        $res = $this->product->getBySubStrName($name, $offset);
 
         return $this->buildResponse($res);
     }
@@ -53,7 +55,9 @@ class Product
     public function getByBrand(Request $request, $attributes)
     {
         $name = $attributes['name'];
-        $res = $this->product->getByBrand($name);
+        $offset = intval($attributes['offset']);
+
+        $res = $this->product->getByBrand($name, $offset);
 
         return $this->buildResponse($res);
     }
@@ -61,7 +65,9 @@ class Product
     public function getBySection(Request $request, $attributes)
     {
         $name = $attributes['name'];
-        $res = $this->product->getBySection($name);
+        $offset = intval($attributes['offset']);
+
+        $res = $this->product->getBySection($name, $offset);
 
         return $this->buildResponse($res);
     }
@@ -69,7 +75,9 @@ class Product
     public function getBySections(Request $request, $attributes)
     {
         $name = $attributes['name'];
-        $res = $this->product->getBySections($name);
+        $offset = intval($attributes['offset']);
+
+        $res = $this->product->getBySections($name, $offset);
 
         return $this->buildResponse($res);
     }

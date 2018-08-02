@@ -16,7 +16,7 @@ class Product extends Model
      */
     public function getById($id)
     {
-        $sql = 'SELECT * FROM product WHERE id = ?';
+        $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand FROM product AS p WHERE p.id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
         $data = $stmt->fetch();
@@ -28,12 +28,17 @@ class Product extends Model
      * @param string $str
      * @return array
      */
-    public function getBySubStrName($str)
+    public function getBySubStrName($str, $offset = 0)
     {
         $name = "%$str%";
-        $sql = 'SELECT * FROM product WHERE name LIKE ?';
+        $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand 
+                FROM product AS p WHERE p.name LIKE :name ORDER BY p.name LIMIT :offset, :limit";
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$name]);
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $this->options['limit'], \PDO::PARAM_INT);
+        $stmt->execute();
         $data = $stmt->fetchAll();
 
         return $data;
@@ -43,15 +48,22 @@ class Product extends Model
      * @param string $brandName
      * @return array
      */
-    public function getByBrand($brandName)
+    public function getByBrand($brandName, $offset = 0)
     {
         $arrBrand = explode('+', $brandName);
         $placeHolder = implode(', ', array_fill(0, count($arrBrand), '?'));
 
-        $sql = "SELECT * FROM product WHERE brand IN ($placeHolder)";
+        $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand FROM product As p 
+                WHERE p.brand IN ($placeHolder) ORDER BY p.name LIMIT ?, ?";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($arrBrand);
+
+        for ($i = 0; $i < count($arrBrand); $i++) {
+            $stmt->bindValue($i + 1, $arrBrand[$i]);
+        }
+        $stmt->bindValue(count($arrBrand) + 1, $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(count($arrBrand) + 2, $this->options['limit'], \PDO::PARAM_INT);
+        $stmt->execute();
         $data = $stmt->fetchAll();
 
         return $data;
@@ -61,9 +73,10 @@ class Product extends Model
      * @param $section
      * @return array
      */
-    public function getBySection($section)
+    public function getBySection($section, $offset = 0)
     {
-        $products = $this->getBySectionCol($section, 'name');
+        $products = $this->getBySectionCol($section, 'name', $offset);
+
         return $products;
     }
 
@@ -71,11 +84,11 @@ class Product extends Model
      * @param string $sections
      * @return array
      */
-    public function getBySections($sections)
+    public function getBySections($sections, $offset = 0)
     {
         $arrSections = explode('>>', $sections);
 
-        $sql = 'select s1.id, s1.name, s1.lft, s1.rgt, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
+        $sql = 'SELECT s1.id, s1.name, s1.lft, s1.rgt, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
                 WHERE s1.lft BETWEEN s2.lft AND s2.rgt GROUP BY s1.id ORDER BY s1.lft;';
 
         $stmt = $this->pdo->prepare($sql);
@@ -83,7 +96,7 @@ class Product extends Model
         $data = $stmt->fetchAll();
 
         $idLastNode = $this->getLastSubSectionId($data, $arrSections);
-        $products = $this->getBySectionCol($idLastNode, 'id');
+        $products = $this->getBySectionCol($idLastNode, 'id', $offset);
 
         return $products;
     }
@@ -97,7 +110,7 @@ class Product extends Model
      * Second sub query find all id leafs of current section
      * Major query find all product correspond finded sections id
      */
-    private function getBySectionCol($placeholder, $columnName)
+    private function getBySectionCol($placeholder, $columnName, $offset = 0)
     {
         $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand 
                 FROM productsection AS ps JOIN product AS p ON ps.product_id = p.id
@@ -108,13 +121,17 @@ class Product extends Model
                        AND s1.lft + 1 = s1.rgt
                        AND s2.id IN 
                     (
-                        SELECT id FROM section WHERE $columnName = ?
+                        SELECT id FROM section WHERE $columnName = :placeholder
                     )
                 )
-                ORDER BY p.name";
+                ORDER BY p.name LIMIT :offset, :limit";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$placeholder]);
+        $stmt->bindValue(':placeholder', $placeholder);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $this->options['limit'], \PDO::PARAM_INT);
+
+        $stmt->execute();
         $data = $stmt->fetchAll();
 
         return $data;

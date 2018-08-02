@@ -43,7 +43,10 @@ class Core
     {
         $this->routes->add($route, new Route(
             $route,
-            ['_controller' => ['class' => $controller, 'method' => $method]]
+            [
+                '_controller' => ['class' => $controller, 'method' => $method],
+                'offset' => 0,
+            ]
         ));
     }
 }
