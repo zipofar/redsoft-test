@@ -10,6 +10,13 @@ class Product extends Model
     private $options = [
         'limit' => 20,
     ];
+
+    public function __construct(array $options = [])
+    {
+        parent::__construct();
+        $this->options = array_merge($this->options, $options);
+    }
+
     /**
      * @param $id
      * @return mixed

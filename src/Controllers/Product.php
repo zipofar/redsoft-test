@@ -12,7 +12,7 @@ class Product
 
     public function __construct()
     {
-        $this->product = new MProduct();
+        $this->product = new MProduct(['limit' => 10]);
     }
 
     private function buildResponse($response)
