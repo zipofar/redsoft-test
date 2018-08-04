@@ -30,7 +30,14 @@ class Core
             $matcher = new UrlMatcher($this->routes, $context);
             $attributes = $matcher->match($path);
 
-            $controller = new $attributes['_controller']['class']();
+            switch ($attributes['_controller']['class']) {
+                case 'Product':
+                    $product = new Model\MProduct(['limit' => 10]);
+                    $response = new Response();
+                    $controller = new Controller\Product ($response, $product);
+                    break;
+            }
+
             $response = call_user_func([$controller, $attributes['_controller']['method']], $request, $attributes);
         } catch (ResourceNotFoundException $e) {
             $response = new Response('{"meta":{"error":"wrong uri"}}', Response::HTTP_NOT_FOUND);

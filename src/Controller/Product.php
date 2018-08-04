@@ -1,18 +1,20 @@
 <?php
 
-namespace Zipofar;
+namespace Zipofar\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Zipofar\Model\Product as MProduct;
+use Zipofar\Model\MProduct;
 
 class Product
 {
     private $product;
+    private $response;
 
-    public function __construct()
+    public function __construct(Response $response, MProduct $product)
     {
-        $this->product = new MProduct(['limit' => 10]);
+        $this->product = $product;
+        $this->response = $response;
     }
 
     private function buildResponse($response)
@@ -28,10 +30,18 @@ class Product
 
             $newResponse['payload'] = '{}';
 
-            return new Response(json_encode($newResponse), Response::HTTP_NOT_FOUND, ['content-type' => 'application/json']);
+            $this->response->setContent(json_encode($newResponse));
+            $this->response->headers->set('content-type', 'application/json');
+            $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
+
+            return $this->response;
         }
 
-        return new Response(json_encode($newResponse), Response::HTTP_OK, ['content-type' => 'application/json']);
+        $this->response->setContent(json_encode($newResponse));
+        $this->response->headers->set('content-type', 'application/json');
+        $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
+
+        return $this->response;
     }
 
     public function getById(Request $request, $attributes)

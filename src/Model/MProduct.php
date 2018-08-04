@@ -5,7 +5,7 @@ namespace Zipofar\Model;
 use Zipofar\Db;
 use Zipofar\Model\Model;
 
-class Product extends Model
+class MProduct extends Model
 {
     private $options = [
         'limit' => 20,
