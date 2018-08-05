@@ -1,21 +1,25 @@
 <?php
 
-require_once "../vendor/autoload.php";
+namespace Zipofar\Database;
 
-$dotenv = new Dotenv\Dotenv(getcwd()."/../");
-$dotenv->load();
-
-function createTables($tables, $pdo)
+class Migration
 {
-    foreach ($tables as $tableName => $query) {
-        $pdo->exec("SET foreign_key_checks = 0");
-        $pdo->exec("DROP TABLE IF EXISTS $tableName");
-        $pdo->exec("SET foreign_key_checks = 1");
-        $pdo->exec($query);
+    private $pdo;
+    private $tables;
+
+    public function __construct(\PDO $pdo, array $tables)
+    {
+        $this->pdo = $pdo;
+        $this->tables = $tables;
+    }
+
+    public function createTables()
+    {
+        foreach ($this->tables as $tableName => $query) {
+            $this->pdo->exec("SET foreign_key_checks = 0");
+            $this->pdo->exec("DROP TABLE IF EXISTS $tableName");
+            $this->pdo->exec("SET foreign_key_checks = 1");
+            $this->pdo->exec($query);
+        }
     }
 }
-
-$pdo = Zipofar\Db::getInstance();
-$tables = require_once "Tables.php";
-
-createTables($tables, $pdo);

@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<dataset>
+    <product id="1" name="FoodVegRedSour" availability="1" price="1.99" brand="Russia Kolhoz" />
+    <product id="2" name="FoodVegRedSweet" availability="1" price="1.50" brand="Gruzin" />
+    <product id="3" name="FoodVegGreenSour" availability="1" price="1.50" brand="Russia Kolhoz" />
+    <product id="4" name="FoodVegGreenSweet" availability="1" price="1.50" brand="Country" />
+    <product id="5" name="FoodFruitRedSour" availability="1" price="1.50" brand="Dacha" />
+    <product id="6" name="FoodFruitRedSweet" availability="1" price="1.50" brand="Polsky" />
+    <product id="7" name="FoodFruitGreenSour" availability="1" price="1.50" brand="Turkish" />
+    <product id="8" name="FoodFruitGreenSweet" availability="1" price="1.50" brand="Petrovna" />
+</dataset>

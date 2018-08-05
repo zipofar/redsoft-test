@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<dataset>
-    <guestbook id="1" content="Hello buddy!" user="joe" />
-    <guestbook id="2" content="I like it!" user="nancy" />
-    <guestbook id="3" content="Hello world!" user="suzy" />
-</dataset>
