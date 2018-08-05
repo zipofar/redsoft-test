@@ -1,6 +1,6 @@
 <?php
 
-namespace Zipofar;
+namespace Zipofar\Database;
 
 class Db
 {

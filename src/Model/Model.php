@@ -2,7 +2,7 @@
 
 namespace Zipofar\Model;
 
-use Zipofar\Db;
+use Zipofar\Database\Db;
 
 class Model
 {

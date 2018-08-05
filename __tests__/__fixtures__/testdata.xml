@@ -8,4 +8,27 @@
     <product id="6" name="FoodFruitRedSweet" availability="1" price="1.50" brand="Polsky" />
     <product id="7" name="FoodFruitGreenSour" availability="1" price="1.50" brand="Turkish" />
     <product id="8" name="FoodFruitGreenSweet" availability="1" price="1.50" brand="Petrovna" />
+    <section id="1" name="Food" lft="1" rgt="30" />
+    <section id="2" name="Vegetable" lft="2" rgt="15" />
+    <section id="3" name="Red" lft="3" rgt="8" />
+    <section id="4" name="Sour" lft="4" rgt="5" />
+    <section id="5" name="Sweet" lft="6" rgt="7" />
+    <section id="6" name="Green" lft="9" rgt="14" />
+    <section id="7" name="Sour" lft="10" rgt="11" />
+    <section id="8" name="Sweet" lft="12" rgt="13" />
+    <section id="9" name="Fruit" lft="16" rgt="29" />
+    <section id="10" name="Red" lft="17" rgt="22" />
+    <section id="11" name="Sour" lft="18" rgt="19" />
+    <section id="12" name="Sweet" lft="20" rgt="21" />
+    <section id="13" name="Green" lft="23" rgt="28" />
+    <section id="14" name="Sour" lft="24" rgt="25" />
+    <section id="15" name="Sweet" lft="26" rgt="27" />
+    <productsection id="1" product_id="1" section_id="4" />
+    <productsection id="2" product_id="2" section_id="5" />
+    <productsection id="3" product_id="3" section_id="7" />
+    <productsection id="4" product_id="4" section_id="8" />
+    <productsection id="5" product_id="5" section_id="11" />
+    <productsection id="6" product_id="6" section_id="12" />
+    <productsection id="7" product_id="7" section_id="14" />
+    <productsection id="8" product_id="8" section_id="15" />
 </dataset>

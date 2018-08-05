@@ -1,5 +1,8 @@
 migrate:
-	cd public/ && php ../src/Database/Migration.php
+	php  artisan.php migrate
+
+migrate-test:
+	php artisan.php migrate testdb
 
 testdata:
 	cd public/ && php ../src/Database/TestData.php

@@ -1,9 +1,15 @@
 <?php
 
-require_once "../vendor/autoload.php";
+require_once __DIR__."/vendor/autoload.php";
 
-use Symfony\Component\HttpFoundation\Request;
-use Zipofar\Core;
+use Symfony\Component\Console\Application;
+use \Zipofar\Console\MakeMigration;
 
-$dotenv = new Dotenv\Dotenv(__DIR__."/../");
+$dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
+
+$application = new Application();
+
+$application->add(new MakeMigration());
+
+$application->run();
