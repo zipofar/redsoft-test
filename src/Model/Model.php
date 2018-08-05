@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ingprog
- * Date: 28.07.18
- * Time: 0:09
- */
 
 namespace Zipofar\Model;
 
