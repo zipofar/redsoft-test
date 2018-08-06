@@ -15,3 +15,6 @@ fixlint:
 
 test:
 	composer run-script phpunit
+
+setup:
+	make migrate && make migrate-test && make testdata
