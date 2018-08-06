@@ -95,14 +95,15 @@ class MProduct extends Model
     {
         $arrSections = explode('>>', $sections);
 
+        // Get Section Hierarchy
         $sql = 'SELECT s1.id, s1.name, s1.lft, s1.rgt, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
                 WHERE s1.lft BETWEEN s2.lft AND s2.rgt GROUP BY s1.id ORDER BY s1.lft;';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([]);
-        $data = $stmt->fetchAll();
+        $stmt->execute();
+        $hierarchy = $stmt->fetchAll();
 
-        $idLastNode = $this->getLastSubSectionId($data, $arrSections);
+        $idLastNode = $this->getLastSubSectionId($hierarchy, $arrSections);
         $products = $this->getBySectionCol($idLastNode, 'id', $offset);
 
         return $products;
@@ -155,6 +156,10 @@ class MProduct extends Model
 
         if (strtolower($origTree[0]['name']) !== $userTree[0]) {
             return null;
+        }
+
+        if (count($userTree) === 1) {
+            return $origTree[0]['id'];
         }
 
         $resultTree[] = $origTree[0];
