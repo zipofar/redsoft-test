@@ -38,7 +38,7 @@ class Core
                     break;
             }
 
-            $response = call_user_func([$controller, $attributes['_controller']['method']], $request, $attributes);
+            $response = call_user_func([$controller, $attributes['_controller']['method']], $attributes);
         } catch (ResourceNotFoundException $e) {
             $response = new Response('{"meta":{"error":"wrong uri"}}', Response::HTTP_NOT_FOUND);
         }

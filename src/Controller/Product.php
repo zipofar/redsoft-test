@@ -27,24 +27,19 @@ class Product
         ];
 
         if (empty($response)) {
-
-            $newResponse['payload'] = '{}';
-
-            $this->response->setContent(json_encode($newResponse));
-            $this->response->headers->set('content-type', 'application/json');
+            $newResponse['payload'] = new \stdClass();
             $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
-
-            return $this->response;
+        } else {
+            $this->response->setStatusCode(Response::HTTP_OK);
         }
 
         $this->response->setContent(json_encode($newResponse));
         $this->response->headers->set('content-type', 'application/json');
-        $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
 
         return $this->response;
     }
 
-    public function getById(Request $request, $attributes)
+    public function getById($attributes)
     {
         $id = $attributes['id'];
         $res = $this->product->getById($id);
@@ -52,7 +47,7 @@ class Product
         return $this->buildResponse($res);
     }
 
-    public function getBySubStrName(Request $request, $attributes)
+    public function getBySubStrName($attributes)
     {
         $name = $attributes['name'];
         $offset = intval($attributes['offset']);
@@ -62,7 +57,7 @@ class Product
         return $this->buildResponse($res);
     }
 
-    public function getByBrand(Request $request, $attributes)
+    public function getByBrand($attributes)
     {
         $name = $attributes['name'];
         $offset = intval($attributes['offset']);
@@ -72,7 +67,7 @@ class Product
         return $this->buildResponse($res);
     }
 
-    public function getBySection(Request $request, $attributes)
+    public function getBySection($attributes)
     {
         $name = $attributes['name'];
         $offset = intval($attributes['offset']);
@@ -82,7 +77,7 @@ class Product
         return $this->buildResponse($res);
     }
 
-    public function getBySections(Request $request, $attributes)
+    public function getBySections($attributes)
     {
         $name = $attributes['name'];
         $offset = intval($attributes['offset']);

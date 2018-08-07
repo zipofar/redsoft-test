@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
-use Zipofar\Database\Migration;
 use Zipofar\Model\MProduct;
 
 class MProductTest extends TestCase
