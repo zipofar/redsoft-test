@@ -14,9 +14,9 @@ class MakeMigration extends Command
     protected function configure()
     {
         $this
-            ->setName('migrate')
-            ->setDescription('Make migration')
-            ->setHelp('This command create tables in database')
+            ->setName('make:migration')
+            ->setDescription('This command create tables in database')
+            ->setHelp('Add argument "testdb" for create tables in test database')
             ->addArgument('testdb', InputArgument::OPTIONAL, '')
         ;
     }
