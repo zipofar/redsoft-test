@@ -4,6 +4,9 @@ migrate:
 migrate-test:
 	php artisan.php make:migration testdb
 
+seeder:
+	php artisan.php make:seeder
+
 testdata:
 	cd public/ && php ../src/Database/TestData.php
 
@@ -17,4 +20,4 @@ test:
 	composer run-script phpunit
 
 setup:
-	make migrate && make migrate-test && make make:seeder
+	make migrate && make migrate-test && make seeder
