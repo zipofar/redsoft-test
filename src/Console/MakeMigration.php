@@ -34,6 +34,6 @@ class MakeMigration extends Command
         $migration = new Migration($pdo, $tables);
         $migration->createTables();
 
-        $output->writeln(['Start migration process']);
+        $output->writeln(['Process migration']);
     }
 }
