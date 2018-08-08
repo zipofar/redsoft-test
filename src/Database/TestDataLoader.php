@@ -19,13 +19,12 @@ class TestDataLoader
     {
         foreach ($this->data as $tableName => $rows) {
 
-var_dump($rows);
-            if (!isset($rows[0])) {
+            if (empty(end($rows))) {
                 continue;
             }
 
-            $columnsName = implode(', ', array_keys($rows[0]));
-            $placeholders = implode(', ', array_fill(0, count($rows[0]), '?'));
+            $columnsName = implode(', ', array_keys(end($rows)));
+            $placeholders = implode(', ', array_fill(0, count(end($rows)), '?'));
             $sql = "INSERT INTO $tableName ($columnsName) VALUES ($placeholders)";
             $stmt = $this->pdo->prepare($sql);
             foreach ($rows as $row) {
