@@ -21,7 +21,7 @@ services:
       - mariadb
 
   mariadb:
-    build: ./images/mariadb
+    image: mariadb:latest
     ports:
       - "3306:3306"
     volumes:
@@ -29,6 +29,3 @@ services:
       - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: secret
-      #MYSQL_DATABASE: redsoft
-      #MYSQL_USER: redsoft
-      #MYSQL_PASSWORD: redsoft
