@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./app:/var/www/html
+      - ./nginx/log:/var/log/nginx
+    links:
+      - php
+
+  php:
+    build: ./images/php
+    volumes:
+      - ./app:/var/www/html
+    links:
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/db:/var/lib/mysql
+      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      #MYSQL_DATABASE: redsoft
+      #MYSQL_USER: redsoft
+      #MYSQL_PASSWORD: redsoft

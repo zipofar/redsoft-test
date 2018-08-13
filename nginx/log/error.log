@@ -1,0 +1,7 @@
+2018/08/09 15:58:32 [emerg] 1#1: open() "/etc/nginx/fastcgi.conf" failed (2: No such file or directory) in /etc/nginx/conf.d/default.conf:21
+2018/08/09 16:03:46 [emerg] 1#1: open() "/etc/nginx/fastcgi.conf" failed (2: No such file or directory) in /etc/nginx/conf.d/default.conf:21
+2018/08/09 16:06:30 [error] 5#5: *1 directory index of "/var/www/html/" is forbidden, client: 172.20.0.1, server: redsoft.loc, request: "GET / HTTP/1.1", host: "redsoft.loc:8080"
+2018/08/09 16:08:33 [error] 5#5: *1 directory index of "/var/www/" is forbidden, client: 172.20.0.1, server: redsoft.loc, request: "GET / HTTP/1.1", host: "redsoft.loc:8080"
+2018/08/09 16:12:03 [error] 5#5: *1 directory index of "/var/www/html/" is forbidden, client: 172.20.0.1, server: redsoft.loc, request: "GET / HTTP/1.1", host: "redsoft.loc:8080"
+2018/08/09 16:14:51 [error] 5#5: *6 directory index of "/var/www/html/" is forbidden, client: 172.20.0.1, server: redsoft.loc, request: "GET / HTTP/1.1", host: "redsoft.loc:8080"
+2018/08/09 16:25:48 [error] 5#5: *1 directory index of "/var/www/html/" is forbidden, client: 172.20.0.1, server: redsoft.loc, request: "GET / HTTP/1.1", host: "redsoft.loc:8080"
