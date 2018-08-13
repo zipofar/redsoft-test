@@ -21,7 +21,7 @@ services:
       - mariadb
 
   mariadb:
-    image: mariadb:latest
+    build: ./images/mariadb
     ports:
       - "3306:3306"
     volumes:
