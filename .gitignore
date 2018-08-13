@@ -1,0 +1,4 @@
+*.swp
+vendor/
+mysql/db/
+.idea/
