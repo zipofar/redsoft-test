@@ -1,4 +1,6 @@
 *.swp
 vendor/
 mysql/db/
+nginx/log/
 .idea/
+*.cache
