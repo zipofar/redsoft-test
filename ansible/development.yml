@@ -1,0 +1,28 @@
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Make env for Docker
+      template:
+        src: templates/env_docker.j2 
+        dest: '../.env' 
+
+    - name: Make env for App
+      template:
+        src: templates/env_app.j2
+        dest: '../app/.env'
+
+    - name: Make env for Tests App
+      template:
+        src: templates/env_app_test.j2
+        dest: '../app/__tests__/.env'
+
+    - name: Make instruction for create db
+      template:
+        src: templates/01_create_db.sql.j2
+        dest: '../mysql/docker-entrypoint-initdb.d/01_create_db.sql'
+
+    - name: Make instruction for create db for tests
+      template:
+        src: templates/02_create_db_for_tests.sql.j2
+        dest: '../mysql/docker-entrypoint-initdb.d/02_create_db_for_tests.sql'

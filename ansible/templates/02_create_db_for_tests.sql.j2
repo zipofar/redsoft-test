@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS `{{ vault_db_test_name }}`;
+CREATE USER '{{ vault_db_test_username }}' IDENTIFIED BY '{{ vault_db_test_password }}';
+GRANT ALL ON {{ vault_db_test_name }}.* TO '{{ vault_db_test_username }}';

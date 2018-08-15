@@ -1,0 +1,8 @@
+vault_db_hostname: "mariadb"
+vault_db_name: "redsoft"
+vault_db_username: "redsoft"
+vault_db_password: "redsoft"
+vault_db_test_name: "redsoft_test"
+vault_db_test_username: "redsoft_test"
+vault_db_test_password: "redsoft_test"
+vault_db_root_password: "secret"
