@@ -12,6 +12,24 @@
         src: templates/env_app.j2
         dest: '../app/.env'
 
+    - name: Make dir
+      file:
+        path: ../mysql/docker-entrypoint-initdb.d
+        state: directory
+        mode: 0755
+
+    - name: Make dir
+      file:
+        path: ../mysql/db
+        state: directory
+        mode: 0755
+
+    - name: Make dir
+      file:
+        path: ../nginx/log
+        state: directory
+        mode: 0755
+
     - name: Make instruction for create db
       template:
         src: templates/01_create_db.sql.j2
