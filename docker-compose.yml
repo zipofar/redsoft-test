@@ -4,8 +4,9 @@ services:
 
   nginx:
     image: nginx:latest
+    env_file: .env
     ports:
-      - "8080:80"
+      - "${WEBSERVER_PORT}:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./app:/var/www/html
@@ -23,9 +24,9 @@ services:
   mariadb:
     image: mariadb:latest
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - ./mysql/db:/var/lib/mysql
       - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
