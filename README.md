@@ -52,16 +52,18 @@
 
 ## Install
 
-* Clone repo
+Clone repo
 
 ```bash
 $ git clone https://github.com/zipofar/redsoft-test.git
 ```
+[Install ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
 ```bash
 $ cd redsoft-test
+$ make ansible-development-setup
 $ make run
-$ make setup
+$ make development-setup
 ```
 
 ## Run
@@ -70,10 +72,14 @@ $ make setup
 $ make run
 ```
 
-* Open <http://localhost:8080>
+Open <http://localhost:4000>
 
 ## Test
-
+If did not run app, first
+```
+$ make run
+```
+run test
 ```bash
 $ make test
 ```
