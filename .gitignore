@@ -1,6 +1,9 @@
 *.swp
 vendor/
-mysql/db/
-nginx/log/
+/mysql/db/
+/nginx/log/
 .idea/
 *.cache
+.env
+/tmp/
+/mysql/docker-entrypoint-initdb.d/
