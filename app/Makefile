@@ -10,7 +10,13 @@ seeder:
 test:
 	composer run-script phpunit
 
-vendor:
+dev-vendor:
 	composer install
 
-setup: vendor migrate migrate-test seeder
+prod-vendor:
+	composer install --no-dev
+
+dev-setup: dev-vendor migrate migrate-test seeder
+
+prod-setup: prod-vendor migrate seeder
+
