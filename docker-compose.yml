@@ -23,8 +23,6 @@ services:
 
   mariadb:
     image: mariadb:latest
-    ports:
-      - "${DB_PORT}:3306"
     volumes:
       - ./mysql/db:/var/lib/mysql
       - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
