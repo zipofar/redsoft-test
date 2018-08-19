@@ -20,3 +20,6 @@ dev-setup: dev-vendor migrate migrate-test seeder
 
 prod-setup: prod-vendor migrate seeder
 
+update-autoload:
+	composer dump-autoload
+

@@ -26,3 +26,6 @@ ansible-vaults-encrypt:
 
 ansible-vaults-decrypt:
 	ansible-vault decrypt ansible/production/group_vars/all/vault.yml
+
+update-autoload:
+	docker-compose run php make update-autoload
