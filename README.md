@@ -72,6 +72,18 @@ URL не должен заканчиваться символом слеш.
 /api/sections/{root>>node>>node>>leaf}/{offset}
 ```
 
+* Получить всю иерархию разделов (json)
+
+```
+/api/hierarchy
+```
+
+* Получить всю иерархию разделов в виде html списка (добавить /1)
+
+```
+/api/hierarchy/1
+```
+
 ## Requirements
 
 * Mac / Linux
