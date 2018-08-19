@@ -1,31 +1,61 @@
 <?php
 
-namespace Zipofar\Function;
+namespace Zipofar\Misc;
 
 
 class Helper
 {
-    public static function ($arr, $level = 0, $startIndex = 0)
+    public static function buildTree($arr)
     {
-        $lastId = count($arr) - 1;
-        $res = [];
+        $hasChild = function ($arr, $i, $lastId, $level)
+        {
+            return $i < $lastId && (int) $arr[$i + 1]['level'] === $level + 1;
+        };
 
-        for($i = $startIndex; $i <= $lastId; $i++) {
+        $buildAst = function ($arr, $level = 0, $startIndex = 0) use (&$buildAst, $hasChild)
+        {
+            $lastId = count($arr) - 1;
+            $res = [];
 
-            if ($arr[$i]['level'] === $level) {
-                $res[$i] = $arr[$i];
-            } elseif ($arr[$i]['level'] < $level) {
-                break;
-            } else {
-                continue;
+            for($i = $startIndex; $i <= $lastId; $i++) {
+
+                if ((int) $arr[$i]['level'] === $level) {
+                    $res[$i] = $arr[$i];
+                } elseif ($arr[$i]['level'] < $level) {
+                    break;
+                } else {
+                    continue;
+                }
+
+                if ($hasChild($arr, $i, $lastId, $level)) {
+                    $res[$i]['children'] = $buildAst($arr, $level + 1, $i + 1);
+                }
             }
 
-            if ($i < $lastId && $arr[$i + 1]['level'] === $level + 1) {
-                $res[$i]['child'] = buildTree($arr, $level + 1, $i + 1);
-            }
-        }
+            return $res;
+        };
 
-        return $res;
+        return $buildAst($arr);
     }
 
+    public static function buildListFromAst($ast)
+    {
+        $iter = function ($rest, $acc) use (&$iter) {
+            if (empty($rest)) {
+                return $acc;
+            }
+            $el = array_slice($rest, 0, 1)[0];
+            $tail = array_slice($rest, 1);
+
+            if (isset($el['children'])) {
+                $acc .= '<li>'.$el['name'];
+                $newAcc = $acc.'<ul>'.$iter($el['children'], '').'</ul></li>';
+            } else {
+                $newAcc = "$acc<li>{$el['name']}</li>";
+            }
+
+            return $iter($tail, $newAcc);
+        };
+        return '<ul>'.$iter($ast, '').'</ul>';
+    }
 }
