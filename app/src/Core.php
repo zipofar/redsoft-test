@@ -53,6 +53,7 @@ class Core
             [
                 '_controller' => ['class' => $controller, 'method' => $method],
                 'offset' => 0,
+                'pretty' => false,
             ]
         ));
     }

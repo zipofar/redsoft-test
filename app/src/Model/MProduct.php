@@ -87,6 +87,18 @@ class MProduct extends Model
         return $products;
     }
 
+    public function getHierarchy()
+    {
+        $sql = 'SELECT s1.name, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
+                WHERE s1.lft BETWEEN s2.lft AND s2.rgt GROUP BY s1.id ORDER BY s1.lft;';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $hierarchy = $stmt->fetchAll();
+
+        return $hierarchy;
+    }
+
     /**
      * @param string $sections
      * @return array
@@ -102,7 +114,6 @@ class MProduct extends Model
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $hierarchy = $stmt->fetchAll();
-
         $idLastNode = $this->getLastSubSectionId($hierarchy, $arrSections);
         $products = $this->getBySectionCol($idLastNode, 'id', $offset);
 

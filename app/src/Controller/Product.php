@@ -5,6 +5,7 @@ namespace Zipofar\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\MProduct;
+use Zipofar\Misc\Helper;
 
 class Product
 {
@@ -37,6 +38,26 @@ class Product
         $this->response->headers->set('content-type', 'application/json');
 
         return $this->response;
+    }
+
+    public function getHierarchy($attributes)
+    {
+        $pretty = $attributes['pretty'] === false ? false : true;
+        $hierarchy = $this->product->getHierarchy();
+
+        if (!empty($hierarchy)) {
+            $ast = Helper::buildTree($hierarchy);
+        }
+
+        if ($pretty) {
+            $list = Helper::buildListFromAst($ast);
+            $this->response->setStatusCode(Response::HTTP_OK);
+            $this->response->setContent($list);
+            $this->response->headers->set('content-type', 'text/html');
+            return $this->response;
+        }
+
+        return $this->buildResponse($ast);
     }
 
     public function getById($attributes)
