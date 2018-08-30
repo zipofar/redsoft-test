@@ -28,7 +28,8 @@ class Product
         ];
 
         if (empty($response)) {
-            $newResponse['payload'] = new \stdClass();
+            $emptyPayload = new \stdClass();
+            $newResponse['payload'] = $emptyPayload;
             $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
         } else {
             $this->response->setStatusCode(Response::HTTP_OK);

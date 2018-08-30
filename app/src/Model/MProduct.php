@@ -14,6 +14,11 @@ class MProduct extends Model
     public function __construct(array $options = [])
     {
         parent::__construct();
+        $this->setOptions($options);
+    }
+
+    public function setOptions($options)
+    {
         $this->options = array_merge($this->options, $options);
     }
 
