@@ -1,6 +1,9 @@
 run:
 	docker-compose up -d
 
+run-dev:
+	docker-compose -f docker-compose_dev.yml up -d
+
 kill:
 	docker-compose kill
 
@@ -29,3 +32,6 @@ ansible-vaults-decrypt:
 
 update-autoload:
 	docker-compose run php make update-autoload
+
+build-dev:
+	docker-compose -f docker-compose_dev.yml build
