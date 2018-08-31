@@ -1,2 +1,2 @@
 webserver_port: 4000
-db_port: 9898
+app_debug: true
