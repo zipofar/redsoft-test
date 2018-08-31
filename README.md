@@ -102,14 +102,14 @@ $ git clone https://github.com/zipofar/redsoft-test.git
 ```bash
 $ cd redsoft-test
 $ make ansible-development-setup
-$ make run
+$ make run-dev
 $ make development-setup
 ```
 
 ## Run
 
 ```bash
-$ make run
+$ make run-dev
 ```
 
 Open <http://localhost:4000>
@@ -117,7 +117,7 @@ Open <http://localhost:4000>
 ## Test
 If did not run app, first
 ```
-$ make run
+$ make run-dev
 ```
 run test
 ```bash
