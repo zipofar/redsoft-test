@@ -24,7 +24,7 @@ RUN echo "xdebug.default_enable = off" >> ${XDEBUG_INI} \
     && echo "xdebug.remote_autostart = off" >> ${XDEBUG_INI} \
     && echo "xdebug.remote_connect_back = off" >> ${XDEBUG_INI} \
     && echo "xdebug.remote_port = 9001" >> ${XDEBUG_INI} \
-    && echo "xdebug.remote_host = 192.168.0.81" >> ${XDEBUG_INI}
+    && echo "xdebug.remote_host ="`/sbin/ip route | awk '/default/{print $3}'` >> ${XDEBUG_INI}
 
 WORKDIR /var/www/html
 
