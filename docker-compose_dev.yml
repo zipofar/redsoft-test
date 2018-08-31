@@ -15,7 +15,7 @@ services:
       - php
 
   php:
-    build: ./images/php
+    build: ./images/php_dev
     volumes:
       - ./app:/var/www/html
     links:

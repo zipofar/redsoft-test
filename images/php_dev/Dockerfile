@@ -14,6 +14,18 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+RUN pecl install xdebug-2.6.1 \
+    && docker-php-ext-enable xdebug
+
+ARG XDEBUG_INI=/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN echo "xdebug.default_enable = off" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_enable = on" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_autostart = off" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_connect_back = off" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_port = 9001" >> ${XDEBUG_INI} \
+    && echo "xdebug.remote_host = 192.168.0.81" >> ${XDEBUG_INI}
+
 WORKDIR /var/www/html
 
 CMD ["php-fpm"]
