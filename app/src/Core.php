@@ -13,28 +13,28 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class Core
 {
     protected $routes;
+    private $di_container;
 
-    public function __construct()
+    public function __construct($di_container)
     {
         $this->routes = new RouteCollection();
+        $this->di_container = $di_container;
     }
 
     public function handle(Request $request)
     {
         $path = $request->getPathInfo();
-
         $context = new RequestContext();
         $context->fromRequest($request);
 
         try {
             $matcher = new UrlMatcher($this->routes, $context);
             $attributes = $matcher->match($path);
+            $calledClass = $attributes['_controller']['class'];
 
-            switch ($attributes['_controller']['class']) {
+            switch ($calledClass) {
                 case 'Product':
-                    $product = new Model\MProduct(['limit' => 10]);
-                    $response = new Response();
-                    $controller = new Controller\Product ($response, $product);
+                    $controller = $this->di_container->get('\Zipofar\Controller\Product');
                     break;
             }
 

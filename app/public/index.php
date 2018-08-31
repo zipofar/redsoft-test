@@ -8,7 +8,8 @@ use Zipofar\Core;
 $dotenv = new Dotenv\Dotenv(__DIR__."/../");
 $dotenv->load();
 
-$app = new Core();
+$container = new DI\Container();
+$app = new Core($container);
 $request = Request::createFromGlobals();
 
 $app->addRoute('/api/id/{id}', 'Product', 'getById');
