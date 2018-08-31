@@ -6,4 +6,4 @@ vendor/
 *.cache
 .env
 /tmp/
-/log/
+app/log/
