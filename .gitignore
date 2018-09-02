@@ -7,3 +7,4 @@ vendor/
 .env
 /tmp/
 app/log/
+images/php_dev/docker-php-ext-xdebug.ini
