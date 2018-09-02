@@ -1,5 +1,5 @@
 - hosts: all
-  gather_facts: no
+  gather_facts: yes
 
   tasks:
     - name: Make env for Docker
@@ -44,3 +44,8 @@
       template:
         src: templates/02_create_db_for_tests.sql.j2
         dest: '../mysql/docker-entrypoint-initdb.d/02_create_db_for_tests.sql'
+
+    - name: Build and copy Xdebug setting for Dockerfile dev
+      template:
+        src: templates/docker-php-ext-xdebug.ini.j2
+        dest: '../images/php_dev/docker-php-ext-xdebug.ini'
