@@ -106,6 +106,9 @@ $ make run-dev
 $ make development-setup
 ```
 
+Open <http://localhost:4000>
+
+Так же в dev окружении настроен Xdebug на порту 9001
 ## Run
 
 ```bash
@@ -115,7 +118,7 @@ $ make run-dev
 Open <http://localhost:4000>
 
 ## Test
-If did not run app, first
+If did not run app, first "make run-dev"
 ```
 $ make run-dev
 ```
