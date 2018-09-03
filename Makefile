@@ -22,6 +22,8 @@ ansible-development-setup:
 	ansible-playbook ansible/development.yml -i ansible/development -vv -K
 
 ansible-production-setup:
+	mkdir -p tmp
+	echo '' >> tmp/ansible-vault-password
 	ansible-playbook ansible/production.yml -i ansible/production -vv -K
 
 ansible-vaults-encrypt:
@@ -35,3 +37,6 @@ update-autoload:
 
 build-dev:
 	docker-compose -f docker-compose_dev.yml build
+
+build-prod:
+	docker-compose build
