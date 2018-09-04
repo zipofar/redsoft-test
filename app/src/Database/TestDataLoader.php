@@ -6,8 +6,8 @@ use PHPUnit\DbUnit\TestCaseTrait;
 
 class TestDataLoader
 {
-    private $pdo;
-    private $data;
+    protected $pdo;
+    protected $data;
 
     public function __construct(\PDO $pdo, array $data)
     {

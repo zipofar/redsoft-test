@@ -9,16 +9,40 @@ use Zipofar\Misc\Helper;
 
 class Product
 {
-    private $product;
-    private $response;
+    /**
+     * Model product
+     *
+     * @var MProduct
+     */
+    protected $product;
 
+    /**
+     * Object Response
+     *
+     * @var Response
+     */
+    protected $response;
+
+    /**
+     * Product constructor
+     *
+     * @param Response $response Response object
+     * @param MProduct $product  Model of Product
+     */
     public function __construct(Response $response, MProduct $product)
     {
         $this->product = $product;
         $this->response = $response;
     }
 
-    private function buildResponse($response)
+    /**
+     * Response builder
+     *
+     * @param array $response Payload data for response
+     *
+     * @return Response
+     */
+    protected function buildResponse($response)
     {
         $newResponse = [
             'meta' => [
@@ -41,6 +65,13 @@ class Product
         return $this->response;
     }
 
+    /**
+     * Get plain hierarchy, build ast and return json or html list (<ul></ul>)
+     *
+     * @param array $attributes Attributes of Request
+     *
+     * @return Response
+     */
     public function getHierarchy($attributes)
     {
         $pretty = $attributes['pretty'] === false ? false : true;
@@ -61,6 +92,13 @@ class Product
         return $this->buildResponse($ast);
     }
 
+    /**
+     * Get product by ID
+     *
+     * @param array $attributes Attributes of Request
+     *
+     * @return Response
+     */
     public function getById($attributes)
     {
         $id = $attributes['id'];
@@ -69,6 +107,13 @@ class Product
         return $this->buildResponse($res);
     }
 
+    /**
+     * Get product by start part product name
+     *
+     * @param array $attributes Attributes of Request
+     *
+     * @return Response
+     */
     public function getBySubStrName($attributes)
     {
         $name = $attributes['name'];
@@ -79,6 +124,13 @@ class Product
         return $this->buildResponse($res);
     }
 
+    /**
+     * Get product by brand name
+     *
+     * @param array $attributes Attributes of Request
+     *
+     * @return Response
+     */
     public function getByBrand($attributes)
     {
         $name = $attributes['name'];
@@ -89,6 +141,13 @@ class Product
         return $this->buildResponse($res);
     }
 
+    /**
+     * Get product by specific section of product
+     *
+     * @param array $attributes Attributes of Request
+     *
+     * @return Response
+     */
     public function getBySection($attributes)
     {
         $name = $attributes['name'];
@@ -99,6 +158,13 @@ class Product
         return $this->buildResponse($res);
     }
 
+    /**
+     * Get product by path tree sections. Like a Electrinics->TV->LCD...
+     *
+     * @param array $attributes Attributes of Request
+     *
+     * @return Response
+     */
     public function getBySections($attributes)
     {
         $name = $attributes['name'];

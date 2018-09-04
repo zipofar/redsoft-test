@@ -17,18 +17,18 @@ class MakeMigration extends Command
             ->setName('make:migration')
             ->setDescription('This command create tables in database')
             ->setHelp('Add argument "testdb" for create tables in test database')
-            ->addArgument('testdb', InputArgument::OPTIONAL, '')
-        ;
+            ->addArgument('testdb', InputArgument::OPTIONAL, '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getArgument('testdb')) {
-            $dotenv = new \Dotenv\Dotenv(__DIR__.'/../../__tests__');
+            $pathToTestsDir = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'__tests';
+            $dotenv = new \Dotenv\Dotenv($pathToTestsDir);
             $dotenv->overload();
         }
         
-        $tables = require_once __DIR__.'/../Database/Tables.php';
+        $tables = require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'Tables.php';
         $pdo = Db::getInstance();
         
         $migration = new Migration($pdo, $tables);

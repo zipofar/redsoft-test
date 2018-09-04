@@ -5,19 +5,24 @@ namespace Zipofar\Misc;
 
 class Helper
 {
+    /**
+     * Build tree from flat array
+     *
+     * @param $arr
+     *
+     * @return array
+     */
     public static function buildTree($arr)
     {
-        $hasChild = function ($arr, $i, $lastId, $level)
-        {
+        $hasChild = function ($arr, $i, $lastId, $level) {
             return $i < $lastId && (int) $arr[$i + 1]['level'] === $level + 1;
         };
 
-        $buildAst = function ($arr, $level = 0, $startIndex = 0) use (&$buildAst, $hasChild)
-        {
+        $buildAst = function ($arr, $level = 0, $startIndex = 0) use (&$buildAst, $hasChild) {
             $lastId = count($arr) - 1;
             $res = [];
 
-            for($i = $startIndex; $i <= $lastId; $i++) {
+            for ($i = $startIndex; $i <= $lastId; $i++) {
 
                 if ((int) $arr[$i]['level'] === $level) {
                     $res[$i] = $arr[$i];
@@ -38,6 +43,13 @@ class Helper
         return $buildAst($arr);
     }
 
+    /**
+     * Build html list from AST
+     *
+     * @param $ast
+     *
+     * @return string
+     */
     public static function buildListFromAst($ast)
     {
         $iter = function ($rest, $acc) use (&$iter) {

@@ -4,7 +4,7 @@ namespace Zipofar\Database;
 
 class Db
 {
-    private static $instance = null;
+    protected static $instance = null;
 
     private function __construct()
     {

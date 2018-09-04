@@ -23,3 +23,8 @@ prod-setup: prod-vendor migrate seeder
 update-autoload:
 	composer dump-autoload
 
+lint:
+	composer phpcs
+
+lint-autofix:
+	composer phpcbf

@@ -4,8 +4,8 @@ namespace Zipofar\Database;
 
 class Migration
 {
-    private $pdo;
-    private $tables;
+    protected $pdo;
+    protected $tables;
 
     public function __construct(\PDO $pdo, array $tables)
     {

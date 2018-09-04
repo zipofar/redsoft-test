@@ -2,28 +2,45 @@
 
 namespace Zipofar\Model;
 
+use PhpParser\Node\Expr\Array_;
 use Zipofar\Db;
 use Zipofar\Model\Model;
 
 class MProduct extends Model
 {
-    private $options = [
+    /**
+     * @var array Options array
+     */
+    protected $options = [
         'limit' => 20,
     ];
 
+    /**
+     * MProduct constructor
+     *
+     * @param array $options
+     */
     public function __construct(array $options = [])
     {
         parent::__construct();
         $this->setOptions($options);
     }
 
+    /**
+     * Set options for model Product
+     *
+     * @param $options Array of options
+     */
     public function setOptions($options)
     {
         $this->options = array_merge($this->options, $options);
     }
 
     /**
-     * @param $id
+     * Get product by ID
+     *
+     * @param $id Id product
+     *
      * @return mixed
      */
     public function getById($id)
@@ -37,7 +54,11 @@ class MProduct extends Model
     }
 
     /**
+     * Get product by start part product name
+     *
      * @param string $str
+     * @param integer $offset For pagination
+     *
      * @return array
      */
     public function getBySubStrName($str, $offset = 0)
@@ -58,6 +79,8 @@ class MProduct extends Model
 
     /**
      * @param string $brandName
+     * @param integer $offset For pagination
+     *
      * @return array
      */
     public function getByBrand($brandName, $offset = 0)
@@ -83,6 +106,8 @@ class MProduct extends Model
 
     /**
      * @param $section
+     * @param integer $offset For pagination
+     *
      * @return array
      */
     public function getBySection($section, $offset = 0)
@@ -106,6 +131,8 @@ class MProduct extends Model
 
     /**
      * @param string $sections
+     * @param integer $offset For pagination
+     *
      * @return array
      */
     public function getBySections($sections, $offset = 0)
@@ -126,13 +153,15 @@ class MProduct extends Model
     }
 
     /**
+     * First sub query find id current  section
+     * Second sub query find all id leafs of current section
+     * Major query find all product correspond finded sections id
+     *
      * @param string $placeholder
      * @param string $columnName Name column at the table
      * @return array
      *
-     * First sub query find id current  section
-     * Second sub query find all id leafs of current section
-     * Major query find all product correspond finded sections id
+
      */
     private function getBySectionCol($placeholder, $columnName, $offset = 0)
     {
@@ -165,9 +194,10 @@ class MProduct extends Model
     /**
      * @param array $origTree
      * @param array $userTree
-     * @return null || finded ID
+     *
+     * @return null or finded ID
      */
-    private function getLastSubSectionId(array $origTree, array $userTree)
+    protected function getLastSubSectionId(array $origTree, array $userTree)
     {
 
         if (strtolower($origTree[0]['name']) !== $userTree[0]) {
