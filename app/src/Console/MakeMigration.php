@@ -23,7 +23,7 @@ class MakeMigration extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getArgument('testdb')) {
-            $pathToTestsDir = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'__tests';
+            $pathToTestsDir = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'__tests__';
             $dotenv = new \Dotenv\Dotenv($pathToTestsDir);
             $dotenv->overload();
         }
