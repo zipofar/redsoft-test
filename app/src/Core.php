@@ -2,6 +2,9 @@
 
 namespace Zipofar;
 
+use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -11,6 +14,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use DI\Container;
 
 
 class Core
@@ -44,18 +48,21 @@ class Core
     protected $options;
 
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
      * Core constructor.
      */
-    public function __construct()
+    public function __construct(Container $container)
     {
-        $this->setupOptions();
-        $this->setupDotenv($this->options['pathDotEnvDir']);
+        $this->di_container = $container;
+        $this->options = $options = $this->setupOptions();
+        $this->setupDotenv($options['pathDotEnvDir']);
         $this->routes = new RouteCollection();
-        $this->di_container = new \DI\Container();
         $this->request = Request::createFromGlobals();
-
-        $logFilePath = $this->options['pathLogDir'].DIRECTORY_SEPARATOR.$this->options['fileNameLog'];
-        $this->setupLogger($logFilePath);
+        $this->logger = $this->setupLogger($options['pathLogDir'], $_ENV['APP_DEBUG']);
     }
 
     /**
@@ -66,34 +73,43 @@ class Core
     protected function setupOptions()
     {
         $appPath = dirname(__DIR__);
-
-        $this->options = [
-            'pathLogDir' => $appPath.DIRECTORY_SEPARATOR.'log',
-            'fileNameLog' => 'app.log',
+        $options = [
+            'pathLogDir' => $appPath.'/storage/logs',
             'pathDotEnvDir' => $appPath,
         ];
+        return $options;
     }
 
     /**
-     * Setup Logger if app in production environment
-     * else use default setting from php.ini
+     * Setup Logger. If app in production environment, set APP_DEBUG = false
+     * and move all logs to file
+     * else use default setting from php.ini and show errors to stdout
      *
-     * @param string $logFilePath Path to log file
+     * @param string $pathLogDir Path to log file
+     * @param string $status      Status debug mode TRUE or FALSE
      *
      * @throws \Exception
      *
-     * @return void
+     * @return Logger
      */
-    protected function setupLogger($logFilePath)
+    protected function setupLogger($pathLogDir, $status = 'false')
     {
-        if ($_ENV['APP_DEBUG'] === 'true') {
-            $logger = new Logger('general');
-            $logger->pushHandler(new StreamHandler($logFilePath, Logger::WARNING));
-            $handler = new \Monolog\ErrorHandler($logger);
-            $handler->registerErrorHandler([], false);
-            $handler->registerExceptionHandler();
-            $handler->registerFatalHandler();
+        $logger = new Logger('RedSoft@general');
+
+        if (strtolower($status) === 'false') {
+            $logger->pushHandler(new RotatingFileHandler($pathLogDir.'/dailyLog.log', 0, Logger::DEBUG));
+            $logger->pushProcessor(new \Monolog\Processor\WebProcessor());
+        } else {
+            $logger->pushHandler(new StreamHandler($pathLogDir.'/app.log', Logger::DEBUG));
+            $logger->pushHandler(new ChromePHPHandler());
         }
+
+        $handler = new \Monolog\ErrorHandler($logger);
+        $handler->registerErrorHandler([], false);
+        $handler->registerExceptionHandler();
+        $handler->registerFatalHandler();
+
+        return $logger;
     }
 
     /**
@@ -119,6 +135,8 @@ class Core
      */
     public function run()
     {
+        $this->logger->info('RUN APP');
+
         $path = $this->request->getPathInfo();
         $context = new RequestContext();
         $context->fromRequest($this->request);

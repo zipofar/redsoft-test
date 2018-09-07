@@ -2,7 +2,7 @@
 
 require_once "../vendor/autoload.php";
 
-$app = new Zipofar\Core();
+$app = new Zipofar\Core(new \DI\Container());
 
 $app->addRoute('/api/id/{id}', 'Product', 'getById');
 $app->addRoute('/api/product_name/{name}/{offset}', 'Product', 'getBySubStrName');
