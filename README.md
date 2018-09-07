@@ -106,6 +106,11 @@ $ make run-dev
 $ make development-setup
 ```
 
+По умолчанию логи находятся в app/storage/logs. Для того, чтобы приложение могло создать в этой директории файл логов, необходимо изменить разрешения.
+```
+sudo chmod 777 app/storage/logs
+```
+
 Open <http://localhost:4000>
 
 Так же в dev окружении настроен Xdebug на порту 9001
