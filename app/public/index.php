@@ -14,11 +14,6 @@ $app->get('/api/section/{name}/{offset}', [Product::class, 'getBySection'], ['of
 $app->get('/api/sections/{name}/{offset}', [Product::class, 'getBySections'], ['offset' => 0]);
 $app->get('/api/hierarchy/{pretty}', [Product::class, 'getHierarchy'], ['pretty' => false]);
 
-
-$app->get('/hello', [\Zipofar\Controller\Hello::class, 'index']);
-$app->get('/bye', function ($request, $response) { return $response->setContent('BYE'); });
-$app->get('/test', function () { return $this->get(Zipofar\Controller\Hello::class)->index(); });
-
 $app->run();
 
 
