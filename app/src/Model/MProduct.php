@@ -35,9 +35,8 @@ class MProduct extends Model
     public function getById($id)
     {
         $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand FROM product AS p WHERE p.id = ?";
-        //$sql = "SELECT * FROM product";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([1]);
+        $stmt->execute([$id]);
         $data = $stmt->fetch();
 
         return $data !== false ? $data : [];
