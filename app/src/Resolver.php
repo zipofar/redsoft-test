@@ -5,7 +5,6 @@ namespace Zipofar;
 
 
 use Dotenv\Exception\InvalidCallbackException;
-use Prophecy\Exception\Doubler\ClassNotFoundException;
 use Psr\Container\ContainerInterface;
 
 class Resolver
@@ -19,7 +18,7 @@ class Resolver
 
     /*
      * If $routeAttributes['_controller'] contain array, create object from class name
-     * And call method that object
+     * and call method that object
      * If $routeAttributes['_controller'] contain callback, call it
      */
     public function resolve($routeAttributes = [], $request, $response)
@@ -28,17 +27,15 @@ class Resolver
         $tokens = $this->getTokens($routeAttributes);
 
         /*
-         * Like [\Zipofar\Controller\Hello::class, 'index']
-         * or [\Zipofar\Controller\Hello::class]
+         * callback example [\Zipofar\Controller\Hello::class, 'index']
+         * callback example [\Zipofar\Controller\Hello::class]
          */
         if (is_array($callback) && sizeof($callback) > 0) {
             $class = $callback[0];
-            $obj = $this->container->get($class);
-            $callbackWithObject = [$obj];
-            if (isset($callback[1])) {
-                $method = $callback[1];
-                $callbackWithObject[] = $method;
-            }
+            $createdObj = $this->container->get($class);
+            $callbackWithObject[] = $createdObj;
+            $callbackWithObject[] = $method = $callback[1] ?? '__invoke';
+
             return call_user_func($callbackWithObject, $tokens);
         }
 
