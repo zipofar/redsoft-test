@@ -50,7 +50,7 @@ class Resolver
     }
 
     /*
-     * Return all keys which not begin with lodash
+     * Return all enties where keys not begin with lodash
      */
     protected function getTokens($params = [])
     {
