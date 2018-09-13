@@ -16,17 +16,6 @@ class MProduct extends Model
     ];
 
     /**
-     * MProduct constructor
-     *
-     * @param array $options
-     */
-    public function __construct(array $options = [])
-    {
-        parent::__construct();
-        $this->setOptions($options);
-    }
-
-    /**
      * Set options for model Product
      *
      * @param $options Array of options
@@ -46,8 +35,9 @@ class MProduct extends Model
     public function getById($id)
     {
         $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand FROM product AS p WHERE p.id = ?";
+        //$sql = "SELECT * FROM product";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute([1]);
         $data = $stmt->fetch();
 
         return $data !== false ? $data : [];

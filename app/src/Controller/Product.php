@@ -101,7 +101,7 @@ class Product
      */
     public function getById($attributes)
     {
-        $id = $attributes['id'];
+        $id = $attributes['id'] ?? null;
         $res = $this->product->getById($id);
 
         return $this->buildResponse($res);
