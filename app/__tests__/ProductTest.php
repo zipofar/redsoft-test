@@ -9,18 +9,24 @@ class ProductTest extends TestCase
 {
     public function testNotEmptyGetById()
     {
-        $expectedContent = '{"meta":{"number_of_records":1},"payload":{"id":"1"}}';
+        $returnedFromModel = [
+            'id' => '1',
+            'name' => 'FoodVegRedSour',
+            'availability' => '1',
+            'price' => '1.99',
+            'brand' => 'Russia Kolhoz'
+        ];
+
+        $expectedContent = '{"meta":{"number_of_records":1},"payload":{"id":"1","name":"FoodVegRedSour","availability":"1","price":"1.99","brand":"Russia Kolhoz"}}';
 
         $stubProduct = $this->createMock(MProduct::class);
-        $stubProduct->method('getById')->willReturn(['id' => '1']);
+        $stubProduct->method('getById')->willReturn($returnedFromModel);
 
-        $response = new Response();
-        $product = new Product($response, $stubProduct);
+        $product = new Product(new Response(), $stubProduct);
 
-        $attributes['id'] = '1';
-        $res = $product->getById($attributes);
+        $res = $product->getById(['id' => 1]);
 
-        $this->assertEquals($expectedContent, $res->getContent());
+        $this->assertJsonStringEqualsJsonString($expectedContent, $res->getContent());
         $this->assertEquals('200', $res->getStatusCode());
     }
 
@@ -31,14 +37,11 @@ class ProductTest extends TestCase
         $stubProduct = $this->createMock(MProduct::class);
         $stubProduct->method('getById')->willReturn([]);
 
-        $response = new Response();
-        $product = new Product($response, $stubProduct);
+        $product = new Product(new Response(), $stubProduct);
 
-        $attributes['id'] = '1';
+        $res = $product->getById(['id' => 0]);
 
-        $res = $product->getById($attributes);
-
-        $this->assertEquals($expectedContent, $res->getContent());
+        $this->assertJsonStringEqualsJsonString($expectedContent, $res->getContent());
         $this->assertEquals('404', $res->getStatusCode());
     }
 
@@ -64,28 +67,36 @@ class ProductTest extends TestCase
 
     private function getBySomeMethod($stubMethod, $callableMethod)
     {
-        $expName = 'somename';
-        $expectedContent = '{"meta":{"number_of_records":1},"payload":{"name":"'.$expName.'"}}';
+        $returnedFromModel = [
+            ['id' => 1],
+            ['id' => 2],
+            ['id' => 3],
+        ];
 
-        $stubProduct = $this->createMock(MProduct::class);
-        $stubProduct->method($stubMethod)->willReturn(['name' => $expName]);
+        $expectedContent = [
+            'meta' => [
+                'number_of_records' => sizeof($returnedFromModel),
+            ],
+            'payload' => $returnedFromModel,
+        ];
 
-        $response = new Response();
-        $product = new Product($response, $stubProduct);
+        $stubMProduct = $this->createMock(MProduct::class);
+        $stubMProduct->method($stubMethod)->willReturn($returnedFromModel);
 
-        $attributes['name'] = $expName;
-        $attributes['offset'] = '1';
+        $product = new Product(new Response(), $stubMProduct);
 
-        $stubProduct->expects($this->once())
+        $params = ['name' => 'someProductOrOtherName', 'offset' => '0'];
+/*
+        $stubMProduct->expects($this->once())
             ->method($stubMethod)
             ->with(
                 $this->equalTo($expName),
                 $this->equalTo(1)
             );
+*/
+        $res = call_user_func([$product, $callableMethod], $params);
 
-        $res = call_user_func([$product, $callableMethod], $attributes);
-
-        $this->assertEquals($expectedContent, $res->getContent());
+        $this->assertJsonStringEqualsJsonString(json_encode($expectedContent), $res->getContent());
         $this->assertEquals('200', $res->getStatusCode());
     }
 }

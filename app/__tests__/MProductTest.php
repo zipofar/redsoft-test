@@ -38,7 +38,6 @@ class MProductTest extends TestCase
         ];
         
         $this->assertEquals($expected, $product->getById(1));
-
         $this->assertEquals([], $product->getById(1000));
     }
 
@@ -60,14 +59,15 @@ class MProductTest extends TestCase
         $this->assertEquals(4, count($products));
 
         // Enable OFFSET = 1
-        $products = $product->getBySubStrName('sweet', 1);
-        $this->assertEquals(3, count($products));
+        $products2 = $product->getBySubStrName('sweet', 1);
+        $this->assertEquals(3, count($products2));
 
         // Enable LIMIT
-        $product2 = new MProduct(['limit' => 1]);
-        $products = $product2->getBySubStrName('sweet');
+        $product2 = new MProduct();
+        $product2->setOptions(['limit' => 1]);
+        $products3 = $product2->getBySubStrName('sweet');
 
-        $this->assertEquals(1, count($products));
+        $this->assertEquals(1, count($products3));
     }
 
     public function testGetByBrand()
@@ -103,7 +103,8 @@ class MProductTest extends TestCase
         $this->assertEquals(1, count($res1));
 
         // Enable LIMIT
-        $product2 = new MProduct(['limit' => 1]);
+        $product2 = new MProduct();
+        $product2->setOptions(['limit' => 1]);
         $res2 = $product2->getByBrand("dacha+country");
         $this->assertEquals(1, count($res2));
     }
@@ -125,7 +126,8 @@ class MProductTest extends TestCase
         $this->assertEquals(3, count($res1));
 
         // Enable LIMIT
-        $product2 = new MProduct(['limit' => 1]);
+        $product2 = new MProduct();
+        $product2->setOptions(['limit' => 1]);
         $this->assertEquals([$expected[0]], $product2->getBySection('red'));
     }
 
@@ -150,7 +152,8 @@ class MProductTest extends TestCase
         $this->assertEquals(1, count($res3));
 
         // Enable LIMIT
-        $product2 = new MProduct(['limit' => 1]);
+        $product2 = new MProduct();
+        $product2->setOptions(['limit' => 1]);
         $res4 = $product2->getBySections('food>>fruit');
         $this->assertEquals(1, count($res4));
     }
