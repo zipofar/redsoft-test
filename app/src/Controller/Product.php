@@ -2,6 +2,7 @@
 
 namespace Zipofar\Controller;
 
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\MProduct;
@@ -38,15 +39,15 @@ class Product
     /**
      * Response builder
      *
-     * @param array $response Payload data for response
-     *
+     * @param array $response       Payload data for response
+     * @param integer $countRecords Count records from model
      * @return Response
      */
-    protected function buildResponse($response)
+    protected function buildResponse($response, $countRecords)
     {
         $newResponse = [
             'meta' => [
-                'number_of_records' => count($response),
+                'number_of_records' => $countRecords,
             ],
             'payload' => $response,
         ];
@@ -54,11 +55,12 @@ class Product
         if (empty($response)) {
             $emptyPayload = new \stdClass();
             $newResponse['payload'] = $emptyPayload;
-            $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $statusCode = Response::HTTP_NOT_FOUND;
         } else {
-            $this->response->setStatusCode(Response::HTTP_OK);
+            $statusCode = Response::HTTP_OK;
         }
 
+        $this->response->setStatusCode($statusCode);
         $this->response->setContent(json_encode($newResponse));
         $this->response->headers->set('content-type', 'application/json');
 
@@ -103,8 +105,8 @@ class Product
     {
         $id = $attributes['id'] ?? null;
         $res = $this->product->getById($id);
-
-        return $this->buildResponse($res);
+        $countRecords = empty($res) ? 0 : 1;
+        return $this->buildResponse($res, $countRecords);
     }
 
     /**
@@ -121,7 +123,7 @@ class Product
 
         $res = $this->product->getBySubStrName($name, $offset);
 
-        return $this->buildResponse($res);
+        return $this->buildResponse($res, sizeof($res));
     }
 
     /**
@@ -138,7 +140,7 @@ class Product
 
         $res = $this->product->getByBrand($name, $offset);
 
-        return $this->buildResponse($res);
+        return $this->buildResponse($res, sizeof($res));
     }
 
     /**
@@ -155,7 +157,7 @@ class Product
 
         $res = $this->product->getBySection($name, $offset);
 
-        return $this->buildResponse($res);
+        return $this->buildResponse($res, sizeof($res));
     }
 
     /**
@@ -172,6 +174,6 @@ class Product
 
         $res = $this->product->getBySections($name, $offset);
 
-        return $this->buildResponse($res);
+        return $this->buildResponse($res, sizeof($res));
     }
 }
