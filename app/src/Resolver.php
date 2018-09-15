@@ -6,6 +6,8 @@ namespace Zipofar;
 
 use Dotenv\Exception\InvalidCallbackException;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Resolver
 {
@@ -21,9 +23,9 @@ class Resolver
      * and call method that object
      * If $routeAttributes['_controller'] contain callback, call it
      */
-    public function resolve($routeAttributes = [], $request, $response)
+    public function resolve(array $routeAttributes, Request $request, Response $response)
     {
-        $callback = $routeAttributes['_controller'] ?? [];
+        $callback = $routeAttributes['_controller'] ?? null;
         $tokens = $this->getTokens($routeAttributes);
 
         /*
