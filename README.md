@@ -2,7 +2,7 @@
 
 ## Demo
 
-Демо находится [здесь](redsoft.zipofar.ru) 
+Демо находится <http://redsoft.zipofar.ru> 
 
 ## Описание задания
 
