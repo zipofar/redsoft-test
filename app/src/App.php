@@ -9,6 +9,7 @@
 namespace Zipofar;
 
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class App
             $builder = new \DI\ContainerBuilder();
             $builder->useAnnotations(false);
             $builder->addDefinitions($this->registerDefaultServices());
+            $builder->addDefinitions(require '../src/settings.php');
             $container = $builder->build();
         }
 
@@ -60,7 +62,20 @@ class App
             },
             Resolver::class => function ($container) {
                 return new Resolver($container);
-            }
+            },
+            LoggerInterface::class => function ($container) {
+                $settings = $container->get('settings')['logger'];
+                $logger = new \Monolog\Logger($settings['name']);
+                $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+                $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+
+                $handler = new \Monolog\ErrorHandler($logger);
+                $handler->registerErrorHandler([], false);
+                $handler->registerExceptionHandler();
+                $handler->registerFatalHandler();
+
+                return $logger;
+            },
         ];
     }
 
@@ -108,7 +123,7 @@ class App
             $response = $resolver->resolve(
                 $routeAttributes,
                 $request,
-                $this->container->get(Request::class)
+                $this->container->get(Response::class)
             );
         } catch (ResourceNotFoundException $exception) {
             $response = new Response('Not Found This Route', 404);

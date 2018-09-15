@@ -2,8 +2,7 @@
 
 namespace Zipofar\Controller;
 
-use http\Exception\InvalidArgumentException;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\MProduct;
 use Zipofar\Misc\Helper;
@@ -24,16 +23,20 @@ class Product
      */
     protected $response;
 
+    protected $logger;
+
     /**
      * Product constructor
      *
      * @param Response $response Response object
      * @param MProduct $product  Model of Product
      */
-    public function __construct(Response $response, MProduct $product)
+    public function __construct(Response $response, MProduct $product, LoggerInterface $logger)
     {
         $this->product = $product;
         $this->response = $response;
+        $this->logger = $logger;
+        $logger->info('Launch '. self::class);
     }
 
     /**
