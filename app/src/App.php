@@ -1,25 +1,20 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ingprog
- * Date: 11.09.18
- * Time: 12:54
- */
 
 namespace Zipofar;
 
+use MongoDB\Driver\Exception\UnexpectedValueException;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class App
 {
+    use MiddlewareAwareStack;
+
     protected $container;
 
     public function __construct($container = [])
@@ -27,7 +22,7 @@ class App
         if (is_array($container)) {
             $builder = new \DI\ContainerBuilder();
             $builder->useAnnotations(false);
-            $builder->addDefinitions($this->registerDefaultServices());
+            $builder->addDefinitions(DefaultServiceProvider::register());
             $builder->addDefinitions(require '../src/settings.php');
             $container = $builder->build();
         }
@@ -37,48 +32,6 @@ class App
         }
         $this->container = $container;
     }
-
-    private function registerDefaultServices()
-
-    {
-        $dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
-        $dotenv->safeLoad();
-
-        return [
-            RouteCollection::class => function () {
-                return new RouteCollection();
-            },
-            Request::class => function () {
-                return Request::createFromGlobals();
-            },
-            Response::class => function () {
-                return new Response('', 200);
-            },
-            UrlMatcher::class => function (ContainerInterface $container) {
-                $context = new RequestContext();
-                $context->fromRequest($container->get(Request::class));
-                $routes = $container->get(RouteCollection::class);
-                return new UrlMatcher($routes, $context);
-            },
-            Resolver::class => function ($container) {
-                return new Resolver($container);
-            },
-            LoggerInterface::class => function ($container) {
-                $settings = $container->get('settings')['logger'];
-                $logger = new \Monolog\Logger($settings['name']);
-                $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
-                $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
-
-                $handler = new \Monolog\ErrorHandler($logger);
-                $handler->registerErrorHandler([], false);
-                $handler->registerExceptionHandler();
-                $handler->registerFatalHandler();
-
-                return $logger;
-            },
-        ];
-    }
-
 
     public function getContainer()
     {
@@ -112,25 +65,61 @@ class App
         return $routes;
     }
 
+    public function add($callback)
+    {
+        if (is_string($callback)) {
+            $callback = new DefferedCallable($this->container, $callback);
+        }
+
+        if (!is_callable($callback)) {
+            throw new \UnexpectedValueException('Wrong callback middleware');
+        }
+
+        $this->addMiddleware($callback);
+    }
+
     public function run()
     {
-        $resolver = $this->container->get(Resolver::class);
-        $matcher = $this->container->get(UrlMatcher::class);
         $request = $this->container->get(Request::class);
+        $response = new Response();
 
         try {
-            $routeAttributes = $matcher->match($request->getPathInfo());
-            $response = $resolver->resolve(
-                $routeAttributes,
-                $request,
-                $this->container->get(Response::class)
-            );
+            ob_start();
+            $response = $this->process($request, $response);
         } catch (ResourceNotFoundException $exception) {
             $response = new Response('Not Found This Route', 404);
         } catch (\Exception $e) {
             $response = new Response('Error', 500);
+        } finally {
+            $output = ob_get_clean();
         }
+        $response->setContent($response->getContent().$output);
         $response->send();
+    }
+
+    public function process(Request $request, Response $response)
+    {
+        try {
+            $response = $this->callMiddlewareStack($request, $response);
+        } catch (\Exception $e) {
+            //$response = $this->handleException($e, $request, $response);
+            $response = new Response($e->getMessage());
+        } catch (\Throwable $e) {
+            $response = new Response($e->getMessage());
+            //$response = $this->handlePhpError($e, $request, $response);
+        }
+
+        return $response;
+    }
+
+    public function __invoke(Request $request, Response $response)
+    {
+        $matcher = $this->container->get(UrlMatcher::class);
+        $resolver = $this->container->get(Resolver::class);
+        $routeAttributes = $matcher->match($request->getPathInfo());
+        $callback = $resolver->resolve($routeAttributes);
+        $response = $callback($request, $response);
+        return $response;
     }
 
 

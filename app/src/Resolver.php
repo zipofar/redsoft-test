@@ -23,9 +23,9 @@ class Resolver
      * and call method that object
      * If $routeAttributes['_controller'] contain callback, call it
      */
-    public function resolve(array $routeAttributes, Request $request, Response $response)
+    public function resolve($routeAttributes)
     {
-        $callback = $routeAttributes['_controller'] ?? null;
+        $callback = $routeAttributes['_controller'] ?? [];
         $tokens = $this->getTokens($routeAttributes);
 
         /*
@@ -38,11 +38,23 @@ class Resolver
             $callbackWithObject[] = $createdObj;
             $callbackWithObject[] = $method = $callback[1] ?? '__invoke';
 
-            return call_user_func($callbackWithObject, $tokens);
+            return function (Request $request, Response $response) use ($callbackWithObject, $tokens) {
+                $result = call_user_func($callbackWithObject, $tokens, $request, $response);
+                if (!$result instanceof Response) {
+                    return $response;
+                }
+                return $result;
+            };
         }
 
         if (is_callable($callback)) {
-            return call_user_func($callback, $request, $response, $tokens);
+            return function (Request $request, Response $response) use ($callback, $tokens) {
+                $result =  call_user_func($callback, $request, $response, $tokens);
+                if (!$result instanceof Response) {
+                    return $response;
+                }
+                return $result;
+            };
         }
 
         throw new InvalidCallbackException();
