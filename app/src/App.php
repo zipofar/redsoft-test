@@ -2,14 +2,14 @@
 
 namespace Zipofar;
 
-use MongoDB\Driver\Exception\UnexpectedValueException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Zipofar\Handler\Error;
+use Zipofar\Handler\PhpError;
 
 class App
 {
@@ -84,17 +84,15 @@ class App
     public function run()
     {
         $request = $this->container->get(Request::class);
-        $response = new Response();
+        $response = $this->container->get(Response::class);
 
         try {
             ob_start();
             $response = $this->callMiddlewareStack($request, $response);
         } catch (\Exception $e) {
-            $response = new Response($e->getMessage());
-            //$response = $this->handleException($e, $request, $response);
+            $response = $this->handleException($e, $request, $response);
         } catch (\Throwable $e) {
-            $response = new Response($e->getMessage());
-            //$response = $this->handlePhpError($e, $request, $response);
+            $response = $this->handlePhpError($e, $request, $response);
         } finally {
             $output = ob_get_clean();
         }
@@ -111,31 +109,18 @@ class App
         $response = $callback($request, $response);
         return $response;
     }
-/*
+
     protected function handleException(\Exception $e, Request $request, Response $response)
     {
-        if ($e instanceof MethodNotAllowedException) {
-            $handler = 'notAllowedHandler';
-            $params = [$e->getRequest(), $e->getResponse(), $e->getAllowedMethods()];
-        } elseif ($e instanceof NotFoundException) {
-            $handler = 'notFoundHandler';
-            $params = [$e->getRequest(), $e->getResponse(), $e];
-        } elseif ($e instanceof SlimException) {
-            // This is a Stop exception and contains the response
-            return $e->getResponse();
-        } else {
-            // Other exception, use $request and $response params
-            $handler = 'errorHandler';
-            $params = [$request, $response, $e];
-        }
+        $callable = $this->container->get(Error::class);
+        $params = [$request, $response, $e];
+        return call_user_func_array($callable, $params);
+    }
 
-        if ($this->container->has($handler)) {
-            $callable = $this->container->get($handler);
-            // Call the registered handler
-            return call_user_func_array($callable, $params);
-        }
-
-        // No handlers found, so just throw the exception
-        throw $e;
-    }*/
+    protected function handlePhpError(\Throwable $e, Request $request, Response $response)
+    {
+        $callable = $this->container->get(PhpError::class);
+        $params = [$request, $response, $e];
+        return call_user_func_array($callable, $params);
+    }
 }

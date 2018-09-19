@@ -23,7 +23,7 @@ class DefaultServiceProvider
                 return Request::createFromGlobals();
             },
             Response::class => function () {
-                return new Response('', 200);
+                return new Response();
             },
             UrlMatcher::class => function (ContainerInterface $container) {
                 $context = new RequestContext();
@@ -49,8 +49,9 @@ class DefaultServiceProvider
             },
             ZPdo::class => function ($container) {
                 return new ZPdo($container);
-
             },
+            Handler\Error::class => function () { return new Handler\Error(); },
+            Handler\PhpError::class => function () { return new Handler\PhpError(); },
         ];
     }
 }
