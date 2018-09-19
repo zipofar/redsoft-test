@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ingprog
- * Date: 18.09.18
- * Time: 18:31
- */
 
 namespace Zipofar\Database;
 
 
 use Psr\Container\ContainerInterface;
 
-class Pdo
+class ZPdo
 {
     private $pdo;
 

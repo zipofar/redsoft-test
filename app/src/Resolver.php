@@ -3,8 +3,8 @@
 
 namespace Zipofar;
 
-
-use Dotenv\Exception\InvalidCallbackException;
+use Zipofar\Exception\InvalidCallbackException;
+use Zipofar\Exception\MethodNotFoundException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,27 +37,34 @@ class Resolver
             $createdObj = $this->container->get($class);
             $callbackWithObject[] = $createdObj;
             $callbackWithObject[] = $method = $callback[1] ?? '__invoke';
+            if (!method_exists($createdObj, $method)) {
+                throw new MethodNotFoundException('Not exist method - ${$method}', $class, $method);
+            }
 
-            return function (Request $request, Response $response) use ($callbackWithObject, $tokens) {
+            $fn = function (Request $request, Response $response) use ($callbackWithObject, $tokens) {
                 $result = call_user_func($callbackWithObject, $tokens, $request, $response);
                 if (!$result instanceof Response) {
                     return $response;
                 }
                 return $result;
             };
+
+            return $fn;
         }
 
         if (is_callable($callback)) {
-            return function (Request $request, Response $response) use ($callback, $tokens) {
+            $fn = function (Request $request, Response $response) use ($callback, $tokens) {
                 $result =  call_user_func($callback, $request, $response, $tokens);
                 if (!$result instanceof Response) {
                     return $response;
                 }
                 return $result;
             };
+
+            return $fn;
         }
 
-        throw new InvalidCallbackException();
+        throw new InvalidCallbackException ('${$callback} is not a callable function');
     }
 
     /*

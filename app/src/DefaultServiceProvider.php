@@ -9,14 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 use Psr\Container\ContainerInterface;
+use Zipofar\Database\ZPdo;
 
 class DefaultServiceProvider
 {
     public static function register()
     {
-        $dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
-        $dotenv->safeLoad();
-
         return [
             RouteCollection::class => function () {
                 return new RouteCollection();
@@ -48,6 +46,10 @@ class DefaultServiceProvider
                 $handler->registerFatalHandler();
 
                 return $logger;
+            },
+            ZPdo::class => function ($container) {
+                return new ZPdo($container);
+
             },
         ];
     }

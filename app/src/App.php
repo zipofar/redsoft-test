@@ -19,6 +19,9 @@ class App
 
     public function __construct($container = [])
     {
+        $dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
+        $dotenv->safeLoad();
+
         if (is_array($container)) {
             $builder = new \DI\ContainerBuilder();
             $builder->useAnnotations(false);
@@ -72,7 +75,7 @@ class App
         }
 
         if (!is_callable($callback)) {
-            throw new \UnexpectedValueException('Wrong callback middleware');
+            throw new \InvalidArgumentException('Unexpceted callback middleware ${$callback}');
         }
 
         $this->addMiddleware($callback);
@@ -85,31 +88,18 @@ class App
 
         try {
             ob_start();
-            $response = $this->process($request, $response);
-        } catch (ResourceNotFoundException $exception) {
-            $response = new Response('Not Found This Route', 404);
+            $response = $this->callMiddlewareStack($request, $response);
         } catch (\Exception $e) {
-            $response = new Response('Error', 500);
+            $response = new Response($e->getMessage());
+            //$response = $this->handleException($e, $request, $response);
+        } catch (\Throwable $e) {
+            $response = new Response($e->getMessage());
+            //$response = $this->handlePhpError($e, $request, $response);
         } finally {
             $output = ob_get_clean();
         }
         $response->setContent($response->getContent().$output);
         $response->send();
-    }
-
-    public function process(Request $request, Response $response)
-    {
-        try {
-            $response = $this->callMiddlewareStack($request, $response);
-        } catch (\Exception $e) {
-            //$response = $this->handleException($e, $request, $response);
-            $response = new Response($e->getMessage());
-        } catch (\Throwable $e) {
-            $response = new Response($e->getMessage());
-            //$response = $this->handlePhpError($e, $request, $response);
-        }
-
-        return $response;
     }
 
     public function __invoke(Request $request, Response $response)
@@ -121,6 +111,31 @@ class App
         $response = $callback($request, $response);
         return $response;
     }
+/*
+    protected function handleException(\Exception $e, Request $request, Response $response)
+    {
+        if ($e instanceof MethodNotAllowedException) {
+            $handler = 'notAllowedHandler';
+            $params = [$e->getRequest(), $e->getResponse(), $e->getAllowedMethods()];
+        } elseif ($e instanceof NotFoundException) {
+            $handler = 'notFoundHandler';
+            $params = [$e->getRequest(), $e->getResponse(), $e];
+        } elseif ($e instanceof SlimException) {
+            // This is a Stop exception and contains the response
+            return $e->getResponse();
+        } else {
+            // Other exception, use $request and $response params
+            $handler = 'errorHandler';
+            $params = [$request, $response, $e];
+        }
 
+        if ($this->container->has($handler)) {
+            $callable = $this->container->get($handler);
+            // Call the registered handler
+            return call_user_func_array($callable, $params);
+        }
 
+        // No handlers found, so just throw the exception
+        throw $e;
+    }*/
 }

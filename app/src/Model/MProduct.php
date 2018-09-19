@@ -2,11 +2,9 @@
 
 namespace Zipofar\Model;
 
-use PhpParser\Node\Expr\Array_;
-use Zipofar\Db;
-use Zipofar\Model\Model;
+use Zipofar\Database\ZPdo;
 
-class MProduct extends Model
+class MProduct
 {
     /**
      * @var array Options array
@@ -14,6 +12,13 @@ class MProduct extends Model
     protected $options = [
         'limit' => 20,
     ];
+
+    private $pdo;
+
+    public function __construct(ZPdo $pdo)
+    {
+        $this->pdo = $pdo->get();
+    }
 
     /**
      * Set options for model Product

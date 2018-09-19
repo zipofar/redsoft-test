@@ -16,16 +16,7 @@ $app->get('/api/section/{name}/{offset}', [Product::class, 'getBySection'], ['of
 $app->get('/api/sections/{name}/{offset}', [Product::class, 'getBySections'], ['offset' => 0]);
 $app->get('/api/hierarchy/{pretty}', [Product::class, 'getHierarchy'], ['pretty' => false]);
 
-$app->add(function (Request $request, Response $response, $next) {
-    $response->setContent("Start Clojure -> ".$response->getContent());
-    $response = $next($request, $response);
-    $response->setContent($response->getContent()." <- End Clojure");
-    return $response;
-});
-
 $app->add(Zipofar\Middleware\DummyMiddleware::class);
-
-//$app->add(\Zipofar\Middleware\DummyMiddleware::class);
 
 $app->run();
 
