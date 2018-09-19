@@ -11,7 +11,7 @@ namespace Zipofar\Handler;
 /**
  * Abstract Slim application error handler
  */
-abstract class AbstractError
+abstract class AbstractError extends AbstractHandler
 {
     /**
      * @var bool

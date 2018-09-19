@@ -33,15 +33,17 @@ class Error extends AbstractError
      */
     public function __invoke(Request $request, Response $response, \Exception $exception)
     {
-        $contentType = $request->getRequestFormat();
+        $contentType = $this->determineContentType($request);
+
         switch ($contentType) {
-            case 'json':
+            case 'application/json':
                 $output = $this->renderJsonErrorMessage($exception);
                 break;
-            case 'xml':
+            case 'text/xml':
+            case 'application/xml':
                 $output = $this->renderXmlErrorMessage($exception);
                 break;
-            case 'html':
+            case 'text/html':
                 $output = $this->renderHtmlErrorMessage($exception);
                 break;
             default:
