@@ -2,7 +2,6 @@
 
 namespace Zipofar\Controller;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\MProduct;
 use Zipofar\Misc\Helper;
@@ -23,20 +22,16 @@ class Product
      */
     protected $response;
 
-    protected $logger;
-
     /**
      * Product constructor
      *
      * @param Response $response Response object
      * @param MProduct $product  Model of Product
      */
-    public function __construct(Response $response, MProduct $product, LoggerInterface $logger)
+    public function __construct(Response $response, MProduct $product)
     {
         $this->product = $product;
         $this->response = $response;
-        $this->logger = $logger;
-        $logger->info('Launch '. self::class);
     }
 
     /**
