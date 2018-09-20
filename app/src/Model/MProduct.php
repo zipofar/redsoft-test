@@ -99,7 +99,7 @@ class MProduct
     }
 
     /**
-     * @param $section
+     * @param string  $section Name of the section
      * @param integer $offset For pagination
      *
      * @return array
@@ -113,7 +113,7 @@ class MProduct
 
     public function getHierarchy()
     {
-        $sql = 'SELECT s1.name, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
+        $sql = 'SELECT s1.id, s1.name, COUNT(s2.id) - 1 AS level FROM section AS s1, section AS s2
                 WHERE s1.lft BETWEEN s2.lft AND s2.rgt GROUP BY s1.id ORDER BY s1.lft;';
 
         $stmt = $this->pdo->prepare($sql);
@@ -121,6 +121,30 @@ class MProduct
         $hierarchy = $stmt->fetchAll();
 
         return $hierarchy;
+    }
+
+    public function addProduct($product): void
+    {
+        $sql1 = 'INSERT INTO product (name, availability, price, brand) VALUES (:name, :availability, :price, :brand)';
+        $sql2 = "INSERT INTO productsection (product_id, section_id) VALUES (:product_id, :section_id)";
+
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare($sql1);
+            $stmt->bindValue(':name', $product['name'], \PDO::PARAM_STR);
+            $stmt->bindValue(':availability', $product['availability'], \PDO::PARAM_INT);
+            $stmt->bindValue(':price', $product['price'], \PDO::PARAM_STR);
+            $stmt->bindValue(':brand', $product['brand'], \PDO::PARAM_STR);
+            $stmt->execute();
+
+            $lastId = $this->pdo->lastInsertId();
+
+            $stmt = $this->pdo->prepare($sql2);
+            $stmt->execute(['product_id' => $lastId, 'section_id' => $product['section_id']]);
+            $this->pdo->commit();
+        } catch (\PDOException $e) {
+            $this->pdo->rollBack();
+        }
     }
 
     /**
@@ -155,7 +179,6 @@ class MProduct
      * @param string $columnName Name column at the table
      * @return array
      *
-
      */
     private function getBySectionCol($placeholder, $columnName, $offset = 0)
     {

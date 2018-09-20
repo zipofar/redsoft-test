@@ -2,6 +2,7 @@
 
 namespace Zipofar\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\MProduct;
 use Zipofar\Misc\Helper;
@@ -89,7 +90,7 @@ class Product
             return $this->response;
         }
 
-        return $this->buildResponse($ast);
+        return $this->buildResponse($ast, 1);
     }
 
     /**
@@ -173,5 +174,13 @@ class Product
         $res = $this->product->getBySections($name, $offset);
 
         return $this->buildResponse($res, sizeof($res));
+    }
+
+    public function addProduct($attributes, Request $request) :void
+    {
+        $product = $request->request->get('product');
+        print_r($product);
+
+        $this->product->addProduct($product);
     }
 }
