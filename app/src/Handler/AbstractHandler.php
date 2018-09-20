@@ -39,10 +39,11 @@ abstract class AbstractHandler
      */
     protected function determineContentType(Request $request)
     {
-        $acceptHeader = $request->headers->get('accept');
+        $acceptHeader = $request->headers->get('Accept');
+        $selectedContentTypes = array_intersect(explode(',', $acceptHeader), $this->knownContentTypes);
 
-        if (in_array($acceptHeader, $this->knownContentTypes)) {
-            return $acceptHeader;
+        if (count($selectedContentTypes)) {
+            return current($selectedContentTypes);
         }
 
         // handle +json and +xml specially

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use UnexpectedValueException;
 
 /**
- * Default Slim application error handler for PHP 7+ Throwables
+ * Default application error handler for PHP 7+ Throwables
  *
  * It outputs the error message and diagnostic information in either JSON, XML,
  * or HTML based on the Accept header.
@@ -142,7 +142,7 @@ class PhpError extends AbstractError
     protected function renderJsonErrorMessage(\Throwable $error)
     {
         $json = [
-            'message' => 'Slim Application Error',
+            'message' => 'Application Error',
         ];
 
         if ($this->displayErrorDetails) {
@@ -172,7 +172,7 @@ class PhpError extends AbstractError
      */
     protected function renderXmlErrorMessage(\Throwable $error)
     {
-        $xml = "<error>\n  <message>Slim Application Error</message>\n";
+        $xml = "<error>\n  <message>Application Error</message>\n";
         if ($this->displayErrorDetails) {
             do {
                 $xml .= "  <error>\n";
