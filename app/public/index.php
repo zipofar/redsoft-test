@@ -2,13 +2,11 @@
 
 require_once "../vendor/autoload.php";
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Controller\Product;
 
 $app = new Zipofar\App();
 
-$app->get('/api/id/{id}', [Product::class, 'getById1']);
+$app->get('/api/id/{id}', [Product::class, 'getById']);
 $app->get('/api/product_name/{name}/{offset}', [Product::class, 'getBySubStrName'], ['offset' => 0]);
 $app->get('/api/brand/{name}/{offset}', [Product::class, 'getByBrand'], ['offset' => 0]);
 $app->get('/api/section/{name}/{offset}', [Product::class, 'getBySection'], ['offset' => 0]);
