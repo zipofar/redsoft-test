@@ -29,6 +29,7 @@ class Resolver
         $tokens = $this->getTokens($routeAttributes);
 
         /*
+         * If it is a class controller
          * callback example [\Zipofar\Controller\Hello::class, 'index']
          * callback example [\Zipofar\Controller\Hello::class]
          */
@@ -73,7 +74,8 @@ class Resolver
     protected function getTokens($params = [])
     {
         return array_filter($params, function ($key) {
-            return !stristr($key, '_');
+            //return !stristr($key, '_');
+            return $key[0] !== '_';
         }, ARRAY_FILTER_USE_KEY);
     }
 }
