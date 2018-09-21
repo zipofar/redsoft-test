@@ -60,10 +60,10 @@ class Helper
             $tail = array_slice($rest, 1);
 
             if (isset($el['children'])) {
-                $acc .= '<li>'.$el['name'];
+                $acc .= "<li>id [{$el['id']}] {$el['name']}";
                 $newAcc = $acc.'<ul>'.$iter($el['children'], '').'</ul></li>';
             } else {
-                $newAcc = "$acc<li>{$el['name']}</li>";
+                $newAcc = "$acc<li>id [{$el['id']}] {$el['name']}</li>";
             }
 
             return $iter($tail, $newAcc);

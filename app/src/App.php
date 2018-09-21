@@ -41,17 +41,32 @@ class App
         return $this->container;
     }
 
-    public function get($pattern, $callable, $options = [])
+    public function get($name, $pattern, $callable, $options = [])
     {
-        return $this->map(['GET'], $pattern, $callable, $options);
+        return $this->map(['GET'], $name, $pattern, $callable, $options);
     }
 
-    public function post($pattern, $callable, $options = [])
+    public function post($name, $pattern, $callable, $options = [])
     {
-        return $this->map(['POST'], $pattern, $callable, $options);
+        return $this->map(['POST'], $name, $pattern, $callable, $options);
     }
 
-    public function map($methods, $pattern, $callable, $options = [])
+    public function delete($name, $pattern, $callable, $options = [])
+    {
+        return $this->map(['DELETE'], $name, $pattern, $callable, $options);
+    }
+
+    public function put($name, $pattern, $callable, $options = [])
+    {
+        return $this->map(['PUT'], $name, $pattern, $callable, $options);
+    }
+
+    public function patch($name, $pattern, $callable, $options = [])
+    {
+        return $this->map(['PATCH'], $name, $pattern, $callable, $options);
+    }
+
+    public function map($methods, $name, $pattern, $callable, $options = [])
     {
         if ($callable instanceof \Closure) {
             $newCallable = $callable->bindTo($this->container);
@@ -63,7 +78,7 @@ class App
         $defaults = array_merge(['_controller' => $newCallable], $options);
         $route = new Route($pattern, $defaults);
         $route->setMethods($methods);
-        $routes->add($pattern, $route);
+        $routes->add($name, $route);
 
         return $routes;
     }

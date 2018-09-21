@@ -136,7 +136,6 @@ class MProduct
             $stmt->bindValue(':price', $product['price'], \PDO::PARAM_STR);
             $stmt->bindValue(':brand', $product['brand'], \PDO::PARAM_STR);
             $stmt->execute();
-
             $lastId = $this->pdo->lastInsertId();
 
             $stmt = $this->pdo->prepare($sql2);
@@ -144,6 +143,25 @@ class MProduct
             $this->pdo->commit();
         } catch (\PDOException $e) {
             $this->pdo->rollBack();
+            throw new \PDOException($e->getMessage());
+        }
+    }
+
+    public function deleteProduct($id): void
+    {
+        $sql1 = 'DELETE FROM productsection WHERE product_id = :id';
+        $sql2 = 'DELETE FROM product WHERE id = :id';
+
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare($sql1);
+            $stmt->execute(['id' => $id]);
+            $stmt = $this->pdo->prepare($sql2);
+            $stmt->execute(['id' => $id]);
+            $this->pdo->commit();
+        } catch (\PDOException $e) {
+            $this->pdo->rollBack();
+            throw new \PDOException($e->getMessage());
         }
     }
 

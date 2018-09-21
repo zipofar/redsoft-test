@@ -20,6 +20,7 @@ class DefaultServiceProvider
                 return new RouteCollection();
             },
             Request::class => function () {
+                Request::enableHttpMethodParameterOverride();
                 return Request::createFromGlobals();
             },
             Response::class => function () {

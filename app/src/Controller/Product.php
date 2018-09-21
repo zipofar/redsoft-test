@@ -179,8 +179,24 @@ class Product
     public function addProduct($attributes, Request $request) :void
     {
         $product = $request->request->get('product');
-        print_r($product);
-
         $this->product->addProduct($product);
+    }
+
+    public function deleteProduct($attributes, Request $request) :void
+    {
+        $productId = $request->request->get('product')['id'];
+        echo "DELETE\r\n";
+        print_r($attributes);
+        print_r($request->request->all());
+        //$this->product->deleteProduct($productId);
+    }
+
+    public function putProduct($attributes, Request $request) :void
+    {
+        //$product = $request->request->get('product');
+        echo "PUT\r\n";
+        print_r($attributes);
+        print_r($request->request->all());
+        //$this->product->putProduct($product);
     }
 }
