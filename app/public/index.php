@@ -7,6 +7,7 @@ use Zipofar\Controller\Product;
 $app = new Zipofar\App();
 
 $app->get('product.show', '/api/id/{id}', [Product::class, 'getById']);
+$app->get('products.show', '/api/products', [Product::class, 'showProducts']);
 $app->get('get_product_by_name', '/api/product_name/{name}/{offset}', [Product::class, 'getBySubStrName'], ['offset' => 0]);
 $app->post('product.store', '/api/product_name', [Product::class, 'addProduct']);
 $app->delete('product.destroy', '/api/product_name/{id}', [Product::class, 'deleteProduct']);

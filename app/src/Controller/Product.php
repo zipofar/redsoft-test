@@ -176,6 +176,11 @@ class Product
         return $this->buildResponse($res, sizeof($res));
     }
 
+    public function showProducts($params, Request $request)
+    {
+        var_dump($params); 
+    }
+
     public function addProduct($attributes, Request $request) :void
     {
         $product = $request->request->get('product');
