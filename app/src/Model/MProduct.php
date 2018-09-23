@@ -189,7 +189,9 @@ class MProduct
     }
 
     /**
-     * First sub query find id current  section
+     * Find all products correspond 
+     *
+     * First sub query find id current section
      * Second sub query find all id leafs of current section
      * Major query find all product correspond finded sections id
      *
@@ -227,6 +229,8 @@ class MProduct
 
 
     /**
+     * Root user tree must be equal root original tree
+     * Get id last section
      * @param array $origTree
      * @param array $userTree
      *

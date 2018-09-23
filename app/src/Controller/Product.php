@@ -29,12 +29,16 @@ class Product
      * @param Response $response Response object
      * @param MProduct $product  Model of Product
      */
+    public function __construct(Response $response)
+    {
+    }
+/*
     public function __construct(Response $response, MProduct $product)
     {
         $this->product = $product;
         $this->response = $response;
     }
-
+*/
     /**
      * Response builder
      *
@@ -176,9 +180,24 @@ class Product
         return $this->buildResponse($res, sizeof($res));
     }
 
-    public function showProducts($params, Request $request)
+    public function showProducts($attributes, Request $request)
     {
-        var_dump($params); 
+        $defParams = [
+            'offset' => 0,
+            'name' => '',
+            'brand' => '',
+            'section' => '',
+            'hierarchyPath' => ''
+        ];
+        
+        $params = $request->query->all();
+        $filteredParams = array_filter($params, function ($key) use ($defParams) {
+            return isset($defParams[$key]);
+        }, ARRAY_FILTER_USE_KEY);
+        $compiledParams = array_merge($defParams, $filteredParams);
+
+        var_dump($params);
+        var_dump($compiledParams);
     }
 
     public function addProduct($attributes, Request $request) :void
