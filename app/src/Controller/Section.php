@@ -178,8 +178,25 @@ class Product
 
     public function showProducts($attributes, Request $request)
     {
+        $defParams = [
+            'offset' => 0,
+            'page' => 1,
+            'name' => '',
+            'brand' => '',
+            'section' => '',
+            'hierarchyPath' => ''
+        ];
+
         $params = $request->query->all();
-        $this->product->getProducts($params);
+        $filteredParams = array_filter($params, function ($key) use ($defParams) {
+            return isset($defParams[$key]);
+        }, ARRAY_FILTER_USE_KEY);
+        $compiledParams = array_merge($defParams, $filteredParams);
+
+        $this->product->getProducts($compiledParams);
+
+        var_dump($params);
+        var_dump($compiledParams);
     }
 
     public function addProduct($attributes, Request $request) :void

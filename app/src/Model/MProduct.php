@@ -10,7 +10,9 @@ class MProduct
      * @var array Options array
      */
     protected $options = [
-        'limit' => 20,
+        'def_limit' => 5,
+        'max_limit' => 20,
+        'start_page' => 1,
     ];
 
     private $pdo;
@@ -45,6 +47,151 @@ class MProduct
         $data = $stmt->fetch();
 
         return $data !== false ? $data : [];
+    }
+
+    public function getProducts($params)
+    {
+
+        $preparedParams = $this->prepareParams($params);
+        $offset = $preparedParams['limits']['offset'];
+        $limit = $preparedParams['limits']['limit'];
+
+        $query1 = "SELECT id, name, availability, price, brand FROM product LIMIT {$limit} OFFSET {$offset}";
+
+        if (empty($preparedParams['params'])) {
+            $sql = $query1;
+        } else {
+            $sql = $this->queryBuilder($preparedParams);
+        }
+        var_dump($sql);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->fetchAll();
+
+
+    }
+
+    private function queryBuilder($params)
+    {
+        $offset = $params['limits']['offset'];
+        $limit = $params['limits']['limit'];
+        $normalizedParams = $this->normalizeParams($params['params']);
+
+        $stringWhere = $this->makeStringWhere($normalizedParams);
+        $arrayWhere = $this->makeArrayWhere($normalizedParams);
+
+        $query = "SELECT id, name, availability, price, brand FROM product
+                  WHERE {$stringWhere} LIMIT {$limit} OFFSET {$offset}";
+
+        var_dump($normalizedParams);
+        var_dump($stringWhere);
+        var_dump($arrayWhere);
+
+        return $query;
+    }
+
+    private function makeArrayWhere($params)
+    {
+        $arrayWhere = [];
+
+        foreach ($params as $key => $param) {
+            if (is_array($param)) {
+                $arrayWhere = array_merge($arrayWhere, $param);
+            } else {
+                $arrayWhere[$key] = $param;
+            }
+        }
+
+        return $arrayWhere;
+    }
+
+    private function makeStringWhere($params)
+    {
+        $stringWhere = [];
+
+        foreach ($params as $key => $param) {
+            if (is_array($param)) {
+                $tmp = array_map(function ($item) use ($key) {
+                    return "{$key} = :{$item}";
+                }, array_keys($param));
+                $stringWhere = array_merge($stringWhere, $tmp);
+            } else {
+                $stringWhere[] = "{$key} = :{$key}";
+            }
+        }
+
+        return implode(' AND ', $stringWhere);
+    }
+
+    private function normalizeParams($params)
+    {
+        $res = [];
+
+        foreach ($params as $key => $value) {
+            if (strripos($value, '|') !== false) {
+                $res = array_merge($res, $this->makeArrayParamsFromString($key, $value));
+            } else {
+                $res[$key] = $value;
+            }
+        }
+
+        return $res;
+    }
+
+    private function makeArrayParamsFromString($key, $value)
+    {
+        $arrValues = explode('|', $value);
+        $i = 0;
+        $res = [];
+
+        foreach ($arrValues as $value) {
+            $res[$key.$i] = $value;
+            $i += 1;
+        }
+
+        return [$key => $res];
+    }
+
+    private function prepareParams($params)
+    {
+        $defParams = [
+            'page' => $this->options['start_page'],
+            'per_page' => $this->options['def_limit'],
+            'name' => '',
+            'availability' => '',
+            'price' => '',
+            'brand' => '',
+        ];
+
+        $filteredUnuseParams = array_filter($params, function ($key) use ($defParams) {
+            return isset($defParams[$key]);
+        }, ARRAY_FILTER_USE_KEY);
+        $compiledParams = array_merge($defParams, $filteredUnuseParams);
+
+        $limits = $this->prepareLimits($compiledParams);
+
+        $filteredEmptyParams = array_filter($compiledParams, function ($item) {
+            return $item !== '';
+        });
+
+        unset($filteredEmptyParams['page']);
+        unset($filteredEmptyParams['per_page']);
+
+        $result = [
+            'limits' => $limits,
+            'params' => $filteredEmptyParams,
+        ];
+
+        return $result;
+    }
+
+    private function prepareLimits($params)
+    {
+        $limit = $params['per_page'] > $this->options['max_limit'] ? $this->options['max_limit']: $params['per_page'];
+        $offset = $limit * $params['page'] - $limit;
+
+        return ['limit' => (int) $limit, 'offset' => (int) $offset];
     }
 
     /**
@@ -187,6 +334,8 @@ class MProduct
 
         return $products;
     }
+
+
 
     /**
      * Find all products correspond 

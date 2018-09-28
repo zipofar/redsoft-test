@@ -51,7 +51,7 @@ class HelperTest extends TestCase
 
         $exprctedAst = $this->ast;
 
-        $this->assertEquals($exprctedAst, Helper::buildTree($flatTree));
+        $this->assertEquals($exprctedAst, Helper::buildTreeFromFlatNested($flatTree));
     }
 
     public function testBuildListFromAst()

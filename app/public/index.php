@@ -6,8 +6,9 @@ use Zipofar\Controller\Product;
 
 $app = new Zipofar\App();
 
-$app->get('product.show', '/api/id/{id}', [Product::class, 'getById']);
+$app->get('product.show', '/api/products/{id}', [Product::class, 'getById']);
 $app->get('products.show', '/api/products', [Product::class, 'showProducts']);
+
 $app->get('get_product_by_name', '/api/product_name/{name}/{offset}', [Product::class, 'getBySubStrName'], ['offset' => 0]);
 $app->post('product.store', '/api/product_name', [Product::class, 'addProduct']);
 $app->delete('product.destroy', '/api/product_name/{id}', [Product::class, 'deleteProduct']);
@@ -21,9 +22,19 @@ $app->add(Zipofar\Middleware\DummyMiddleware::class);
 
 $app->run();
 
+?>
+
+/api/products/{id}
+/api/products
+/api/products?brand=Disma&price=20&name=Hurma
+/api/products?brand=Disma|Milk and Way|Magnit
 
 
+/api/categories - return id, name (ast mode)
+/api/categories/{id} - return id, name
+/api/categories/{id}/products
 
+/api/categories/{id}/products?brand=Disma&price=20&name=Hurma
 
 
 

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 use Psr\Container\ContainerInterface;
 use Zipofar\Database\ZPdo;
+use Zipofar\Misc\Helper;
 
 class DefaultServiceProvider
 {
@@ -21,7 +22,9 @@ class DefaultServiceProvider
             },
             Request::class => function () {
                 Request::enableHttpMethodParameterOverride();
-                return Request::createFromGlobals();
+                $request = Request::createFromGlobals();
+                Helper::sanitizeQueryParams($request);
+                return $request;
             },
             Response::class => function () {
                 return new Response();
