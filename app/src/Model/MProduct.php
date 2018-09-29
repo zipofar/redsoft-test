@@ -8,9 +8,6 @@ use Zipofar\Service\QueryBuilder;
 
 class MProduct
 {
-    /**
-     * @var array Options array
-     */
     protected $options = [
         'max_limit' => 20,
     ];
@@ -28,8 +25,7 @@ class MProduct
     private $pdo;
     private $queryBuilder;
     protected $queryParams;
-
-
+    
     public function __construct(ZPdo $pdo, QueryBuilder $queryBuilder, QueryParams $queryParams)
     {
         $this->pdo = $pdo->get();
@@ -63,7 +59,7 @@ class MProduct
         $this->queryParams->addQueryParams(['id' => $id]);
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
-        
+
         $sql = $this->queryBuilder
             ->select('id', 'name', 'availability', 'price', 'brand')
             ->from('product')
