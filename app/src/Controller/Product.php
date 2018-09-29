@@ -179,7 +179,9 @@ class Product
     public function showProducts($attributes, Request $request)
     {
         $params = $request->query->all();
-        $this->product->getProducts($params);
+        $res = $this->product->getProducts($params);
+
+        return $this->buildResponse($res, sizeof($res));
     }
 
     public function addProduct($attributes, Request $request) :void
