@@ -18,6 +18,7 @@ class MProduct
     protected $fields =  [
         'page' => 1,
         'per_page' => 5,
+        'id' => '',
         'name' => '',
         'availability' => '',
         'price' => '',
@@ -59,9 +60,18 @@ class MProduct
      */
     public function getById($id)
     {
-        $sql = "SELECT p.id, p.name, p.availability, p.price, p.brand FROM product AS p WHERE p.id = ?";
+        $this->queryParams->addQueryParams(['id' => $id]);
+        $stringWhere = $this->queryParams->getStringWhere();
+        $arrayWhere = $this->queryParams->getArrayWhere();
+        
+        $sql = $this->queryBuilder
+            ->select('id', 'name', 'availability', 'price', 'brand')
+            ->from('product')
+            ->where($stringWhere)
+            ->build();
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute($arrayWhere);
         $data = $stmt->fetch();
 
         return $data !== false ? $data : [];
