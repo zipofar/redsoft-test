@@ -25,7 +25,7 @@ class MProduct
     private $pdo;
     private $queryBuilder;
     protected $queryParams;
-    
+
     public function __construct(ZPdo $pdo, QueryBuilder $queryBuilder, QueryParams $queryParams)
     {
         $this->pdo = $pdo->get();

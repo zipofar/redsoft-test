@@ -3,28 +3,58 @@
 namespace Zipofar\Model;
 
 use Zipofar\Database\ZPdo;
+use Zipofar\QueryParams;
+use Zipofar\Service\QueryBuilder;
 
-class MProduct
+class MSection
 {
-    /**
-     * @var array Options array
-     */
     protected $options = [
-        'limit' => 20,
+        'max_limit' => 20,
+    ];
+
+    protected $fields =  [
+        'page' => 1,
+        'per_page' => 5,
+        'id' => '',
+        'name' => '',
+        'lft' => '',
+        'rgt' => '',
     ];
 
     private $pdo;
+    private $queryBuilder;
+    protected $queryParams;
 
-    public function __construct(ZPdo $pdo)
+    public function __construct(ZPdo $pdo, QueryBuilder $queryBuilder, QueryParams $queryParams)
     {
         $this->pdo = $pdo->get();
+        $this->queryBuilder = $queryBuilder;
+        $this->queryParams = $queryParams;
+
+        $this->queryParams->addFields($this->fields);
+        $this->queryParams->setLimitField('per_page');
+        $this->queryParams->setOffsetField('page');
     }
 
-    /**
-     * Set options for model Product
-     *
-     * @param $options Array of options
-     */
+    public function getById($id)
+    {
+        $this->queryParams->addQueryParams(['id' => $id]);
+        $stringWhere = $this->queryParams->getStringWhere();
+        $arrayWhere = $this->queryParams->getArrayWhere();
+
+        $sql = $this->queryBuilder
+            ->select('id', 'name')
+            ->from('section')
+            ->where($stringWhere)
+            ->build();
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($arrayWhere);
+        $data = $stmt->fetch();
+
+        return $data !== false ? $data : [];
+    }
+
     public function setOptions($options)
     {
         $this->options = array_merge($this->options, $options);
