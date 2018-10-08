@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ingprog
- * Date: 29.09.18
- * Time: 20:40
- */
 
 namespace Zipofar;
 
@@ -22,7 +16,7 @@ class QueryParams
         $this->fields = array_merge($this->fields, $fields);
     }
 
-    public function addQueryParams(array $params)
+    public function addRequestParams(array $params)
     {
         $this->queryParams = array_merge($this->queryParams, $params);
         $this->preparedParams = $this->prepareParams($this->queryParams, $this->fields);
@@ -60,6 +54,8 @@ class QueryParams
         foreach ($params as $key => $param) {
             if (is_array($param)) {
                 $stringWhere[] = $this->buildINClause($key, $param);
+            } elseif (stripos($param, '%') !== false) {
+                $stringWhere[] = "{$key} LIKE :{$key}";
             } else {
                 $stringWhere[] = "{$key} = :{$key}";
             }
@@ -127,7 +123,7 @@ class QueryParams
         return $result;
     }
 
-    private function parseParams($params)
+    private function parseParams(array $params)
     {
         $res = [];
 

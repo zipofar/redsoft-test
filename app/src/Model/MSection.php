@@ -38,7 +38,7 @@ class MSection
 
     public function getById($id)
     {
-        $this->queryParams->addQueryParams(['id' => $id]);
+        $this->queryParams->addRequestParams(['id' => $id]);
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 

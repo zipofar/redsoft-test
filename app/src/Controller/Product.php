@@ -183,7 +183,7 @@ class Product
 
         return $this->buildResponse($res, sizeof($res));
     }
-
+/*
     public function addProduct($attributes, Request $request) :void
     {
         $product = $request->request->get('product');
@@ -207,4 +207,5 @@ class Product
         print_r($request->request->all());
         //$this->product->putProduct($product);
     }
+*/
 }
