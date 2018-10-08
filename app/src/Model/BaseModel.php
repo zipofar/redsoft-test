@@ -13,6 +13,7 @@ class BaseModel
     const PAGE = 1;
     const PER_PAGE = 5;
 
+    protected $fields =  [];
     protected $options = [
         'max_limit' => 20,
     ];

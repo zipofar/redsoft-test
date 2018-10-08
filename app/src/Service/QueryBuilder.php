@@ -46,7 +46,7 @@ class QueryBuilder
     public function build()
     {
         $fields = sizeof($this->fields) === 0 ? '*' : implode(', ', $this->fields);
-        $query = "SELECT {$fields} FROM product";
+        $query = "SELECT {$fields} FROM {$this->table}";
 
         if (isset($this->where)) {
             $query = $query." WHERE {$this->where}";

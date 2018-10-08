@@ -108,80 +108,20 @@ class Product
         return $this->buildResponse($res, $countRecords);
     }
 
-    /**
-     * Get product by start part product name
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
-    public function getBySubStrName($attributes)
-    {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getBySubStrName($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
-    }
-
-    /**
-     * Get product by brand name
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
-    public function getByBrand($attributes)
-    {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getByBrand($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
-    }
-
-    /**
-     * Get product by specific section of product
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
-    public function getBySection($attributes)
-    {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getBySection($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
-    }
-
-    /**
-     * Get product by path tree sections. Like a Electrinics->TV->LCD...
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
-    public function getBySections($attributes)
-    {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getBySections($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
-    }
-
     public function showProducts($attributes, Request $request)
     {
         $params = $request->query->all();
         $res = $this->product->getProducts($params);
 
         return $this->buildResponse($res, sizeof($res));
+    }
+
+    public function showProductsInSection($attributes, Request $request)
+    {
+        $params = $request->query->all();
+        $id = $attributes['id'];
+        $res = $this->product->getProductsInSection($id, $params);
+
     }
 /*
     public function addProduct($attributes, Request $request) :void
