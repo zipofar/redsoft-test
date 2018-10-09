@@ -19,7 +19,7 @@ class ZPdo
         $this->pdo = new \PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $opt);
     }
 
-    public function get()
+    public function getPDO()
     {
         return $this->pdo;
     }

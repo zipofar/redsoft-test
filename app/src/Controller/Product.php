@@ -93,13 +93,6 @@ class Product
         return $this->buildResponse($ast, 1);
     }
 
-    /**
-     * Get product by ID
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
     public function getById($attributes)
     {
         $id = $attributes['id'] ?? null;
@@ -122,8 +115,9 @@ class Product
         $id = $attributes['id'];
         $res = $this->product->getProductsInSection($id, $params);
 
+        return $this->buildResponse($res, sizeof($res));
     }
-/*
+
     public function addProduct($attributes, Request $request) :void
     {
         $product = $request->request->get('product');
@@ -147,5 +141,5 @@ class Product
         print_r($request->request->all());
         //$this->product->putProduct($product);
     }
-*/
+
 }

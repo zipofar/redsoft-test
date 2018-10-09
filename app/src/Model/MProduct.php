@@ -2,10 +2,6 @@
 
 namespace Zipofar\Model;
 
-use Zipofar\Database\ZPdo;
-use Zipofar\QueryParams;
-use Zipofar\Service\QueryBuilder;
-
 class MProduct extends BaseModel
 {
     protected $fields =  [

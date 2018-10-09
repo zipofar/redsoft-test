@@ -5,14 +5,17 @@ require_once "../vendor/autoload.php";
 use Zipofar\Controller\Product;
 use Zipofar\Controller\Section;
 
+$dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
+$dotenv->safeLoad();
+
 $app = new Zipofar\App();
 
 $app->get('product.show', '/api/products/{id}', [Product::class, 'getById']);
 $app->get('products.show', '/api/products', [Product::class, 'showProducts']);
+$app->get('productsInSection.show', '/api/sections/{id}/products', [Product::class, 'showProductsInSection']);
 
 $app->get('section.show', '/api/sections/{id}', [Section::class, 'getById']);
 $app->get('sections.show', '/api/sections', [Section::class, 'showSections']);
-$app->get('section_products.show', '/api/sections/{id}/products', [Product::class, 'showProductsInSection']);
 
 
 $app->get('get_product_by_name', '/api/product_name/{name}/{offset}', [Product::class, 'getBySubStrName'], ['offset' => 0]);

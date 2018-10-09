@@ -8,6 +8,7 @@
     <product id="6" name="FoodFruitRedSweet" availability="1" price="1.50" brand="Polsky" />
     <product id="7" name="FoodFruitGreenSour" availability="1" price="1.50" brand="Turkish" />
     <product id="8" name="FoodFruitGreenSweet" availability="1" price="1.50" brand="Petrovna" />
+    <product id="9" name="FoodVegRedSour2" availability="1" price="1.99" brand="Russia Kolhoz" />
     <section id="1" name="Food" lft="1" rgt="30" />
     <section id="2" name="Vegetable" lft="2" rgt="15" />
     <section id="3" name="Red" lft="3" rgt="8" />
@@ -31,4 +32,5 @@
     <productsection id="6" product_id="6" section_id="12" />
     <productsection id="7" product_id="7" section_id="14" />
     <productsection id="8" product_id="8" section_id="15" />
+    <productsection id="9" product_id="9" section_id="4" />
 </dataset>

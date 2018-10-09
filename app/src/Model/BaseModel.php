@@ -3,7 +3,7 @@
 namespace Zipofar\Model;
 
 use Zipofar\Database\ZPdo;
-use Zipofar\QueryParams;
+use Zipofar\Service\QueryParams;
 use Zipofar\Service\QueryBuilder;
 
 class BaseModel
@@ -24,7 +24,7 @@ class BaseModel
 
     public function __construct(ZPdo $pdo, QueryBuilder $queryBuilder, QueryParams $queryParams)
     {
-        $this->pdo = $pdo->get();
+        $this->pdo = $pdo->getPDO();
         $this->queryBuilder = $queryBuilder;
         $this->queryParams = $queryParams;
 

@@ -20,7 +20,7 @@ class MakeSeeder extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $data = require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'Database/testdata.php';
+        $data = require_once dirname(__DIR__).'/Database/testdata.php';
         $pdo = Db::getInstance();
         
         $migration = new TestDataLoader($pdo, $data);

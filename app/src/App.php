@@ -19,14 +19,11 @@ class App
 
     public function __construct($container = [])
     {
-        $dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
-        $dotenv->safeLoad();
-
         if (is_array($container)) {
             $builder = new \DI\ContainerBuilder();
             $builder->useAnnotations(false);
             $builder->addDefinitions(DefaultServiceProvider::register());
-            $builder->addDefinitions(require '../src/settings.php');
+            $builder->addDefinitions(require __DIR__.'/settings.php');
             $container = $builder->build();
         }
 
