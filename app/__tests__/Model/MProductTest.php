@@ -209,4 +209,46 @@ class MProductTest extends TestCase
 
         $this->assertEquals($expected, $this->product->getProductsInSection($id, $params));
     }
+
+    public function test_addProduct()
+    {
+        $dataForSave = [
+            'name' => 'FoodVegRedSour3',
+            'availability' => '1',
+            'price' => '2.50',
+            'brand' => 'Magnit',
+            'section_id' => 4
+        ];
+
+        $this->product->addProduct($dataForSave);
+
+        $params = ['name' => 'FoodVegRedSour3'];
+        $expected = 'FoodVegRedSour3';
+
+        $this->assertEquals($expected, $this->product->getProducts($params)[0]['name']);
+    }
+
+    public function test_deleteProduct()
+    {
+        $id = 1;
+        $this->product->deleteProduct($id);
+        $this->assertEquals([], $this->product->getProducts(['id' => $id]));
+    }
+
+    public function test_putProduct()
+    {
+        $id = 1;
+        $updatedData = [
+            'id' => $id,
+            'name' => 'FoodVegRedSour100',
+            'availability' => '0',
+            'price' => '2.20',
+            'brand' => 'Russia Kolhoz New'
+        ];
+
+        $expected = [$updatedData];
+        $this->product->putProduct($updatedData);
+
+        $this->assertEquals($expected, $this->product->getProducts(['id' => $id]));
+    }
 }

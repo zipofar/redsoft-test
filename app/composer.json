@@ -8,7 +8,8 @@
         "symfony/console": "^4.1",
         "php-di/php-di": "^6.0",
         "monolog/monolog": "^1.23",
-        "psr/http-message": "^1.0"
+        "psr/http-message": "^1.0",
+        "php-kit/ext-pdo": "^1.1"
     },
     "autoload": {
         "psr-4": {

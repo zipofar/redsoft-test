@@ -125,4 +125,24 @@ class MProduct extends BaseModel
             throw new \PDOException($e->getMessage());
         }
     }
+
+    public function putProduct($data)
+    {
+        $sql = 'UPDATE product SET 
+                  name = :name, 
+                  availability = :availability, 
+                  price = :price, 
+                  brand = :brand
+                WHERE id = :id';
+
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+            $this->pdo->commit();
+        } catch (\PDOException $e) {
+            $this->pdo->rollBack();
+            throw new \PDOException($e->getMessage());
+        }
+    }
 }

@@ -13,15 +13,14 @@ $app = new Zipofar\App();
 $app->get('product.show', '/api/products/{id}', [Product::class, 'getById']);
 $app->get('products.show', '/api/products', [Product::class, 'showProducts']);
 $app->get('productsInSection.show', '/api/sections/{id}/products', [Product::class, 'showProductsInSection']);
+$app->post('product.store', '/api/products', [Product::class, 'addProduct']);
+$app->delete('product.destroy', '/api/products/{id}', [Product::class, 'deleteProduct']);
+$app->put('product.update', '/api/products/{id}', [Product::class, 'putProduct']);
 
 $app->get('section.show', '/api/sections/{id}', [Section::class, 'getById']);
 $app->get('sections.show', '/api/sections', [Section::class, 'showSections']);
 
 
-$app->get('get_product_by_name', '/api/product_name/{name}/{offset}', [Product::class, 'getBySubStrName'], ['offset' => 0]);
-$app->post('product.store', '/api/product_name', [Product::class, 'addProduct']);
-$app->delete('product.destroy', '/api/product_name/{id}', [Product::class, 'deleteProduct']);
-$app->put('product.update', '/api/product_name/{id}', [Product::class, 'putProduct']);
 $app->get('get_product_by_brand', '/api/brand/{name}/{offset}', [Product::class, 'getByBrand'], ['offset' => 0]);
 $app->get('get_product_by_section', '/api/section/{name}/{offset}', [Product::class, 'getBySection'], ['offset' => 0]);
 $app->get('get_product_by_hierarchy', '/api/sections/{name}/{offset}', [Product::class, 'getBySections'], ['offset' => 0]);
