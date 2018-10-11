@@ -84,6 +84,36 @@ class MProduct extends BaseModel
         return $res;
     }
 
+    public function showProductsInSectionSub($section_id, $params)
+    {
+        $this->queryParams->addRequestParams($params);
+
+        $offset = $this->queryParams->getOffset();
+        $limit = $this->queryParams->getLimit();
+        $limit = $limit > $this->options['max_limit'] ? $this->options['max_limit'] : $limit;
+        $stringWhere = $this->queryParams->getStringWhere();
+        $arrayWhere = $this->queryParams->getArrayWhere();
+
+        $sqlIdSections = 'SELECT s1.id FROM section s1, section s2 
+                          WHERE s1.lft >= s2.lft AND s1.rgt <= s2.rgt AND s2.id = :section_id';
+
+        $sql = $this->queryBuilder
+            ->select('p.id', 'p.name', 'p.availability', 'p.price', 'p.brand')
+            ->from('product AS p JOIN productsection AS ps on (p.id = ps.product_id)');
+
+        if (empty($arrayWhere)) {
+            $sql->where("ps.section_id IN ({$sqlIdSections})");
+        } else {
+            $sql->where($stringWhere." AND ps.section_id IN ({$sqlIdSections})");
+        }
+
+        $sql = $sql->limit($limit, $offset)->build();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array_merge($arrayWhere, ['section_id' => $section_id]));
+        $res = $stmt->fetchAll();
+        return $res;
+    }
+
     public function addProduct($product): void
     {
         $sql1 = 'INSERT INTO product (name, availability, price, brand) VALUES (:name, :availability, :price, :brand)';

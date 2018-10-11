@@ -118,6 +118,16 @@ class Product
         return $this->buildResponse($res, sizeof($res));
     }
 
+    public function showProductsInSectionSub($attributes, Request $request)
+    {
+        $params = $request->query->all();
+        $id = $attributes['id'];
+        $res = $this->product->showProductsInSectionSub($id, $params);
+
+        return $this->buildResponse($res, sizeof($res));
+    }
+
+
     public function addProduct($attributes, Request $request) :void
     {
         $product = $request->request->get('product');

@@ -210,6 +210,64 @@ class MProductTest extends TestCase
         $this->assertEquals($expected, $this->product->getProductsInSection($id, $params));
     }
 
+    public function test_showProductsInSectionSub_AllProductsInSections()
+    {
+        $id = 9;
+        $params = [];
+
+        $expected = [
+            [
+                'id' => '5',
+                'name' => 'FoodFruitRedSour',
+                'availability' => '1',
+                'price' => '1.50',
+                'brand' => 'Dacha'
+            ],
+            [
+                'id' => '6',
+                'name' => 'FoodFruitRedSweet',
+                'availability' => '1',
+                'price' => '1.50',
+                'brand' => 'Polsky'
+            ],
+            [
+                'id' => '7',
+                'name' => 'FoodFruitGreenSour',
+                'availability' => '1',
+                'price' => '1.50',
+                'brand' => 'Turkish'
+            ],
+            [
+                'id' => '8',
+                'name' => 'FoodFruitGreenSweet',
+                'availability' => '1',
+                'price' => '1.50',
+                'brand' => 'Petrovna'
+            ],
+
+        ];
+
+        $this->assertEquals($expected, $this->product->showProductsInSectionSub($id, $params));
+    }
+
+    public function test_showProductsInSectionSub_BrandProductsInSections()
+    {
+        $id = 9;
+        $params = ['brand' => 'Dacha'];
+
+        $expected = [
+            [
+                'id' => '5',
+                'name' => 'FoodFruitRedSour',
+                'availability' => '1',
+                'price' => '1.50',
+                'brand' => 'Dacha'
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->product->showProductsInSectionSub($id, $params));
+    }
+
     public function test_addProduct()
     {
         $dataForSave = [
