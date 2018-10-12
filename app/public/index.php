@@ -21,6 +21,9 @@ $app->put('product.update', '/api/products/{id}', [Product::class, 'putProduct']
 $app->get('section.show', '/api/sections/{id}', [Section::class, 'getById']);
 $app->get('sections.show', '/api/sections', [Section::class, 'showSections']);
 
+$app->post('sections.store', '/api/sections', [Section::class, 'addSection']);
+$app->delete('sections.destroy', '/api/sections/{id}', [Section::class, 'deleteSection']);
+$app->put('sections.update', '/api/sections/{id}', [Section::class, 'updateSection']);
 
 $app->add(Zipofar\Middleware\DummyMiddleware::class);
 
@@ -34,12 +37,12 @@ $app->run();
 /api/products?brand=Disma|Milk and Way|Magnit
 
 
-/api/categories - return id, name (ast mode)
-/api/categories/{id} - return id, name
+/api/sections - return id, name (ast mode)
+/api/sections/{id} - return id, name
 
-/api/categories/{id}/products
-/api/categories/{id}/products?brand=Disma&price=20&name=Hurma
-/api/categories/{id}/children/products?brand=Disma&price=20&name=Hurma
+/api/sections/{id}/products
+/api/sections/{id}/products?brand=Disma&price=20&name=Hurma
+/api/sections/{id}/sub/products?brand=Disma&price=20&name=Hurma
 
 
 
