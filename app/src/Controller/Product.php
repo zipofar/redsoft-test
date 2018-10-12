@@ -5,7 +5,6 @@ namespace Zipofar\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Model\MProduct;
-use Zipofar\Misc\Helper;
 
 class Product
 {
@@ -66,33 +65,6 @@ class Product
         return $this->response;
     }
 
-    /**
-     * Get plain hierarchy, build ast and return json or html list (<ul></ul>)
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
-    public function getHierarchy($attributes)
-    {
-        $pretty = $attributes['pretty'] === false ? false : true;
-        $hierarchy = $this->product->getHierarchy();
-
-        if (!empty($hierarchy)) {
-            $ast = Helper::buildTreeFromFlatNested($hierarchy);
-        }
-
-        if ($pretty) {
-            $list = Helper::buildListFromAst($ast);
-            $this->response->setStatusCode(Response::HTTP_OK);
-            $this->response->setContent($list);
-            $this->response->headers->set('content-type', 'text/html');
-            return $this->response;
-        }
-
-        return $this->buildResponse($ast, 1);
-    }
-
     public function getById($attributes)
     {
         $id = $attributes['id'] ?? null;
@@ -128,28 +100,37 @@ class Product
     }
 
 
-    public function addProduct($attributes, Request $request) :void
+    public function addProduct($attributes, Request $request)
     {
-        $product = $request->request->get('product');
-        $this->product->addProduct($product);
+
+        $product = json_decode($request->getContent(), true);
+        $lastId = $this->product->addProduct($product);
+
+        $this->response->setStatusCode(Response::HTTP_CREATED);
+        $this->response->headers->set('Location', "/api/products/{$lastId}");
+
+        return $this->response;
     }
 
-    public function deleteProduct($attributes, Request $request) :void
+    public function deleteProduct($attributes, Request $request)
     {
-        $productId = $request->request->get('product')['id'];
-        echo "DELETE\r\n";
-        print_r($attributes);
-        print_r($request->request->all());
-        //$this->product->deleteProduct($productId);
+        $id = $attributes['id'];
+        $this->product->deleteProduct($id);
+
+        return $this->response->setStatusCode(Response::HTTP_NO_CONTENT);
     }
 
-    public function putProduct($attributes, Request $request) :void
+    public function putProduct($attributes, Request $request)
     {
-        //$product = $request->request->get('product');
-        echo "PUT\r\n";
-        print_r($attributes);
-        print_r($request->request->all());
-        //$this->product->putProduct($product);
+        $id = $attributes['id'];
+        $product = json_decode($request->getContent(), true);
+        $product['id'] = $id;
+        $this->product->putProduct($product);
+
+        $this->response->setStatusCode(Response::HTTP_CREATED);
+        $this->response->headers->set('Location', "/api/products/{$id}");
+
+        return $this->response;
     }
 
 }
