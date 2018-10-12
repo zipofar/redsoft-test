@@ -114,7 +114,7 @@ class MProduct extends BaseModel
         return $res;
     }
 
-    public function addProduct($product): void
+    public function addProduct($product)
     {
         $sql1 = 'INSERT INTO product (name, availability, price, brand) VALUES (:name, :availability, :price, :brand)';
         $sql2 = "INSERT INTO productsection (product_id, section_id) VALUES (:product_id, :section_id)";
@@ -136,9 +136,11 @@ class MProduct extends BaseModel
             $this->pdo->rollBack();
             throw new \PDOException($e->getMessage());
         }
+
+        return $lastId;
     }
 
-    public function deleteProduct($id): void
+    public function deleteProduct($id)
     {
         $sql1 = 'DELETE FROM productsection WHERE product_id = :id';
         $sql2 = 'DELETE FROM product WHERE id = :id';
@@ -165,14 +167,9 @@ class MProduct extends BaseModel
                   brand = :brand
                 WHERE id = :id';
 
-        try {
-            $this->pdo->beginTransaction();
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($data);
-            $this->pdo->commit();
-        } catch (\PDOException $e) {
-            $this->pdo->rollBack();
-            throw new \PDOException($e->getMessage());
-        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($data);
+
+        return $data['id'];
     }
 }
