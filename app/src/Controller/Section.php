@@ -48,41 +48,9 @@ class Section
         return $this->buildResponse($ast, 1);
     }
 
-    public function getBySubStrName($attributes)
+    public function addSection($attributes, Request $request)
     {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getBySubStrName($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
-    }
-
-    public function getBySection($attributes)
-    {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getBySection($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
-    }
-
-    /**
-     * Get product by path tree sections. Like a Electrinics->TV->LCD...
-     *
-     * @param array $attributes Attributes of Request
-     *
-     * @return Response
-     */
-    public function getBySections($attributes)
-    {
-        $name = $attributes['name'];
-        $offset = intval($attributes['offset']);
-
-        $res = $this->product->getBySections($name, $offset);
-
-        return $this->buildResponse($res, sizeof($res));
+        $params = $request->request->all();
     }
 
     protected function buildResponse($response, $countRecords)
