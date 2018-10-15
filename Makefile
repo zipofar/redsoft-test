@@ -4,6 +4,9 @@ run:
 run-dev:
 	docker-compose -f docker-compose_dev.yml up -d
 
+run-test:
+	docker-compose -f docker-compose_test.yml up -d
+
 kill:
 	docker-compose kill
 

@@ -5,7 +5,10 @@ require_once "../vendor/autoload.php";
 use Zipofar\Controller\Product;
 use Zipofar\Controller\Section;
 
-$dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
+$appEnv = __DIR__.'/..';
+$testEnv = __DIR__.'/../__tests__';
+$envPath = isset($_ENV['TEST_ENV']) ? $testEnv : $appEnv;
+$dotenv = new \Dotenv\Dotenv($envPath);
 $dotenv->safeLoad();
 
 $app = new Zipofar\App();
