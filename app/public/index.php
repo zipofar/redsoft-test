@@ -16,7 +16,7 @@ $app = new Zipofar\App();
 $app->get('product.show', '/api/products/{id}', [Product::class, 'getById']);
 $app->get('products.show', '/api/products', [Product::class, 'showProducts']);
 $app->get('productsInSection.show', '/api/sections/{id}/products', [Product::class, 'showProductsInSection']);
-$app->get('productsInSection.show', '/api/sections/{id}/sub/products', [Product::class, 'showProductsInSectionSub']);
+$app->get('productsInSubSection.show', '/api/sections/{id}/sub/products', [Product::class, 'showProductsInSectionSub']);
 $app->post('product.store', '/api/products', [Product::class, 'addProduct']);
 $app->delete('product.destroy', '/api/products/{id}', [Product::class, 'deleteProduct']);
 $app->put('product.update', '/api/products/{id}', [Product::class, 'putProduct']);

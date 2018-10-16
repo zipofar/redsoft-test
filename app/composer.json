@@ -13,13 +13,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Zipofar\\": "src/",
-            "Tests\\": "__tests__/"
+            "Zipofar\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ZipofarBehatFeatureContext\\": "__tests__/behat/features/bootstrap"
+            "ZipofarBehatFeatureContext\\": "__tests__/behat/features/bootstrap",
+            "Tests\\": "__tests__/"
         }
     },
     "require-dev": {
