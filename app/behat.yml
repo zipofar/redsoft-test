@@ -1,0 +1,9 @@
+default:
+  suites:
+    default:
+      paths: ['%paths.base%/__tests__/behat/features']
+      contexts: [ZipofarBehatFeatureContext\FeatureContext]
+  extensions:
+    Imbo\BehatApiExtension:
+      apiClient:
+        base_uri: http://nginx:80
