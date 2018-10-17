@@ -23,6 +23,6 @@ return [
     ) ENGINE=InnoDB CHARACTER SET=utf8",
 
     'add_foreign_keys' => "ALTER TABLE productsection 
-        ADD CONSTRAINT FK_product FOREIGN KEY (product_id) REFERENCES product(id),
+        ADD CONSTRAINT FK_product FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
         ADD CONSTRAINT FK_section FOREIGN KEY (section_id) REFERENCES section(id)",
 ];
