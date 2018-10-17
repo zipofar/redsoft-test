@@ -112,7 +112,7 @@ class Product
         return $this->response;
     }
 
-    public function deleteProduct($attributes, Request $request)
+    public function deleteProduct($attributes)
     {
         $id = $attributes['id'];
         $this->product->deleteProduct($id);
@@ -132,5 +132,4 @@ class Product
 
         return $this->response;
     }
-
 }
