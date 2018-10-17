@@ -14,14 +14,14 @@ class Section
 
     public function __construct(Response $response, MSection $section)
     {
-        $this->product = $section;
+        $this->section = $section;
         $this->response = $response;
     }
 
     public function getById($attributes)
     {
         $id = $attributes['id'] ?? null;
-        $res = $this->product->getById($id);
+        $res = $this->section->getById($id);
         $countRecords = empty($res) ? 0 : 1;
         return $this->buildResponse($res, $countRecords);
     }
@@ -29,7 +29,7 @@ class Section
     public function showSections($attributes, Request $request)
     {
         $params = $request->query->all();
-        $hierarchy = $this->product->getHierarchy();
+        $hierarchy = $this->section->getHierarchy();
 
         if (!empty($hierarchy)) {
             $ast = Helper::buildTreeFromFlatNested($hierarchy);
@@ -50,7 +50,34 @@ class Section
 
     public function addSection($attributes, Request $request)
     {
-        $params = $request->request->all();
+        $params = json_decode($request->getContent(), true);
+        $lastId = $this->section->addSection($params);
+
+        $this->response->setStatusCode(Response::HTTP_CREATED);
+        $this->response->headers->set('Location', "/api/sections/{$lastId}");
+
+        return $this->response;
+    }
+
+    public function deleteSection($attributes)
+    {
+        $id = $attributes['id'];
+        $this->section->deleteSection($id);
+
+        return $this->response->setStatusCode(Response::HTTP_NO_CONTENT);
+    }
+
+    public function putSection($attributes, Request $request)
+    {
+        $id = $attributes['id'];
+        $section = json_decode($request->getContent(), true);
+        $section['id'] = $id;
+        $this->section->updateSection($section);
+
+        $this->response->setStatusCode(Response::HTTP_CREATED);
+        $this->response->headers->set('Location', "/api/sections/{$id}");
+
+        return $this->response;
     }
 
     protected function buildResponse($response, $countRecords)
