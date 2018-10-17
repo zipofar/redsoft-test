@@ -67,8 +67,9 @@ class MSection extends BaseModel
                 'lft' => $parentLft + 1,
                 'rgt' => $parentLft + 2
             ]);
-
+            $lastId = $this->pdo->lastInsertId();
             $this->pdo->commit();
+            return $lastId;
         } catch (\PDOException $e) {
             $this->pdo->rollBack();
             throw new \PDOException($e->getMessage());
@@ -81,6 +82,34 @@ class MSection extends BaseModel
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
+    }
+
+    public function deleteSection($id)
+    {
+        $section = $this->getByIdFull($id);
+        $tokensForQuery = ['parent_lft' => $section['lft'], 'parent_rgt' => $section['rgt']];
+        $sql = '
+          DELETE FROM product WHERE id IN (
+            SELECT product_id FROM productsection WHERE section_id IN (
+              SELECT id FROM section WHERE lft >= :parent_lft AND rgt <= :parent_rgt
+            )
+          )
+        ';
+
+        $sql2 = 'DELETE FROM section WHERE lft >= :parent_lft AND rgt <= :parent_rgt';
+
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($tokensForQuery);
+            $stmt = $this->pdo->prepare($sql2);
+            $stmt->execute($tokensForQuery);
+            $this->pdo->commit();
+        } catch (\PDOException $e) {
+            $this->pdo->rollBack();
+            throw new \PDOException($e->getMessage());
+        }
+
     }
 
     protected function getByIdFull($id)
