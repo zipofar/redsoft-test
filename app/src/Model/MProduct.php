@@ -132,30 +132,19 @@ class MProduct extends BaseModel
             $stmt = $this->pdo->prepare($sql2);
             $stmt->execute(['product_id' => $lastId, 'section_id' => $product['section_id']]);
             $this->pdo->commit();
+            return $lastId;
         } catch (\PDOException $e) {
             $this->pdo->rollBack();
             throw new \PDOException($e->getMessage());
         }
 
-        return $lastId;
     }
 
     public function deleteProduct($id)
     {
-        $sql1 = 'DELETE FROM productsection WHERE product_id = :id';
-        $sql2 = 'DELETE FROM product WHERE id = :id';
-
-        try {
-            $this->pdo->beginTransaction();
-            $stmt = $this->pdo->prepare($sql1);
-            $stmt->execute(['id' => $id]);
-            $stmt = $this->pdo->prepare($sql2);
-            $stmt->execute(['id' => $id]);
-            $this->pdo->commit();
-        } catch (\PDOException $e) {
-            $this->pdo->rollBack();
-            throw new \PDOException($e->getMessage());
-        }
+        $sql = 'DELETE FROM product WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
     }
 
     public function putProduct($data)
