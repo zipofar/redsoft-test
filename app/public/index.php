@@ -26,7 +26,7 @@ $app->get('sections.show', '/api/sections', [Section::class, 'showSections']);
 
 $app->post('sections.store', '/api/sections', [Section::class, 'addSection']);
 $app->delete('sections.destroy', '/api/sections/{id}', [Section::class, 'deleteSection']);
-$app->put('sections.update', '/api/sections/{id}', [Section::class, 'updateSection']);
+$app->put('sections.update', '/api/sections/{id}', [Section::class, 'putSection']);
 
 $app->add(Zipofar\Middleware\DummyMiddleware::class);
 
