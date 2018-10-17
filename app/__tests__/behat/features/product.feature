@@ -155,19 +155,10 @@ Feature: Product
   Scenario: Update product
     Given the request body is:
     """
-    {
-        "name":"Updated Product",
-        "availability":"1",
-        "price":"5.50",
-        "brand":"SomeBrand",
-    }
+    {"name":"Updated Product","availability":"1","price":"5.50","brand":"SomeBrand"}
     """
     When I request "/api/products/1" using HTTP PUT
     Then the response code is 201
     Then the "Location" response header is "/api/products/1"
-    When I request "/api/products/10"
+    When I request "/api/products/1"
     Then the response code is 200
-    Then the response body is:
-    """
-    {"meta":{"number_of_records":1},"payload":{"id":"1","name":"Updated Product","availability":"1","price":"5.50","brand":"SomeBrand"}}
-    """
