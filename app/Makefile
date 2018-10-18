@@ -7,8 +7,13 @@ migrate-test:
 seeder:
 	php artisan.php make:seeder
 
-test:
-	composer run-script phpunit
+test-unit:
+	vendor/bin/phpunit
+
+test-behat:
+	vendor/bin/behat
+
+test-all: test-unit test-behat
 
 dev-vendor:
 	composer install

@@ -31,7 +31,6 @@
     },
     "scripts": {
         "phpcs": "vendor/bin/phpcs src/",
-        "phpcbf": "vendor/bin/phpcbf src/",
-        "phpunit": "vendor/bin/phpunit --bootstrap vendor/autoload.php __tests__/"
+        "phpcbf": "vendor/bin/phpcbf src/"
     }
 }

@@ -16,8 +16,13 @@ development-setup:
 production-setup:
 	docker-compose run php make prod-setup
 
-test:
-	docker-compose run php make test
+test-unit:
+	docker-compose -f docker-compose_test.yml exec php make test-unit
+
+test-behat:
+	docker-compose -f docker-compose_test.yml exec php make test-behat
+
+test-all: test-unit test-behat
 
 ansible-development-setup:
 	mkdir -p tmp
