@@ -149,7 +149,6 @@ class MProduct extends BaseModel
 
     public function putProduct($data)
     {
-        print_r($data);
         $sql = 'UPDATE product SET 
                   name = :name, 
                   availability = :availability, 
