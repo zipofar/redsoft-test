@@ -92,7 +92,31 @@ class MSectionTest extends TestCase
 
     public function test_deleteSection()
     {
+        $id = '9';
+        $expected = ['id' => $id, 'name' => 'FruitUpdated', 'level' => '1'];
 
+        $this->section->deleteSection($id);
+
+        //Check isset products after it was must be deleted
+        $sql = 'SELECT * FROM product WHERE id BETWEEN 5 AND 8';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->fetchAll();
+        $this->assertEquals([], $res);
+
+        //Check isset sections after it was must be deleted
+        $sql = 'SELECT * FROM section WHERE id BETWEEN 9 AND 15';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->fetchAll();
+        $this->assertEquals([], $res);
+
+        //Check isset productsection after it was must be deleted
+        $sql = 'SELECT * FROM productsection WHERE id BETWEEN 5 AND 8';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->fetchAll();
+        $this->assertEquals([], $res);
     }
 
 }
