@@ -93,8 +93,6 @@ class MSectionTest extends TestCase
     public function test_deleteSection()
     {
         $id = '9';
-        $expected = ['id' => $id, 'name' => 'FruitUpdated', 'level' => '1'];
-
         $this->section->deleteSection($id);
 
         //Check isset products after it was must be deleted
