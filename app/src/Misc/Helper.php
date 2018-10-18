@@ -72,19 +72,4 @@ class Helper
         };
         return '<ul>'.$iter($ast, '').'</ul>';
     }
-
-    /*
-     * Example http://localhost.ru/api?name=BlaBla
-     * Symfony make array like a [?name => 'BlaBla']
-     * This function return [name => 'BlaBla']
-     */
-    public static function sanitizeQueryParams(Request $request): void
-    {
-        $params = $request->query->all();
-        $sanitizedParams = [];
-        array_map(function ($key, $value) use (&$sanitizedParams) {
-            $sanitizedParams[ltrim($key, '?')] = $value;
-        }, array_keys($params), $params);
-        $request->query->replace($sanitizedParams);
-    }
 }

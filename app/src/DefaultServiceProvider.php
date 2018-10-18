@@ -23,7 +23,6 @@ class DefaultServiceProvider
             Request::class => function () {
                 Request::enableHttpMethodParameterOverride();
                 $request = Request::createFromGlobals();
-                Helper::sanitizeQueryParams($request);
                 return $request;
             },
             Response::class => function () {
