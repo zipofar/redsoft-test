@@ -74,7 +74,6 @@ class Resolver
     protected function getTokens($params = [])
     {
         return array_filter($params, function ($key) {
-            //return !stristr($key, '_');
             return $key[0] !== '_';
         }, ARRAY_FILTER_USE_KEY);
     }
