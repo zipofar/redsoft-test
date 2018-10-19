@@ -123,6 +123,10 @@ class QueryParams
         return $result;
     }
 
+    /*
+     * Parse multiple params like a 'param1|param2|param3'
+     *
+     */
     private function parseParams(array $params)
     {
         $res = [];

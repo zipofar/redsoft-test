@@ -49,7 +49,6 @@ class Product
     {
         $params = $request->query->all();
         $res = $this->product->getProducts($params);
-
         return $this->buildResponse($res, sizeof($res));
     }
 

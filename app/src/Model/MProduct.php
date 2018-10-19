@@ -2,6 +2,9 @@
 
 namespace Zipofar\Model;
 
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
+
 class MProduct extends BaseModel
 {
     protected $fields =  [
@@ -12,8 +15,68 @@ class MProduct extends BaseModel
         'brand' => '',
     ];
 
+    protected $_fields =  [
+        'id',
+        'name',
+        'availability',
+        'price',
+        'brand',
+    ];
+
+    public function validate(array $params)
+    {
+        $errors = [];
+
+        $undefinedFields = $this->getUndefinedFields($params);
+        if (sizeof($undefinedFields) > 0) {
+            $errors['undefined'] = array_keys($undefinedFields);
+            return $errors;
+        }
+
+        $rules = $this->getRules();
+        foreach ($params as $key => $param) {
+            try {
+                $rules[$key]->assert($param);
+            } catch(NestedValidationException $exception) {
+                return $errors = $exception->getMessages();
+            }
+        }
+
+        return $errors;
+    }
+
+    public function getUndefinedFields($params)
+    {
+        $definedFields = array_merge($this->_fields, $this->getServiceFields());
+        $undefinedFields = array_filter($params, function ($key) use ($definedFields) {
+            return !in_array($key, $definedFields);
+        }, ARRAY_FILTER_USE_KEY);
+        return $undefinedFields;
+    }
+
+    public function getRules()
+    {
+        $rules = [
+            'id' => v::finite()->positive(),
+            'name' => v::alnum(),
+            'availability' => v::between(0, 1),
+            'price' => v::numeric(),
+            'brand' => v::alnum(),
+            'page' => v::finite()->positive(),
+            'per_page' => v::between(0, 20),
+        ];
+
+        return $rules;
+    }
+
     public function getById($id)
     {
+        $errors = $this->validate(['id' => $id]);
+
+        if (sizeof($errors) > 0) {
+            return ['errors' => $errors];
+        }
+
         $this->queryParams->addRequestParams(['id' => $id]);
 
         $stringWhere = $this->queryParams->getStringWhere();
@@ -33,11 +96,16 @@ class MProduct extends BaseModel
 
     public function getProducts($params)
     {
+        $errors = $this->validate($params);
+
+        if (sizeof($errors) > 0) {
+            return ['errors' => $errors];
+        }
+
         $this->queryParams->addRequestParams($params);
 
         $offset = $this->queryParams->getOffset();
         $limit = $this->queryParams->getLimit();
-        $limit = $limit > $this->options['max_limit'] ? $this->options['max_limit'] : $limit;
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 
@@ -63,7 +131,6 @@ class MProduct extends BaseModel
 
         $offset = $this->queryParams->getOffset();
         $limit = $this->queryParams->getLimit();
-        $limit = $limit > $this->options['max_limit'] ? $this->options['max_limit'] : $limit;
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 
@@ -90,7 +157,6 @@ class MProduct extends BaseModel
 
         $offset = $this->queryParams->getOffset();
         $limit = $this->queryParams->getLimit();
-        $limit = $limit > $this->options['max_limit'] ? $this->options['max_limit'] : $limit;
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 

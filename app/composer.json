@@ -9,7 +9,8 @@
         "php-di/php-di": "^6.0",
         "monolog/monolog": "^1.23",
         "psr/http-message": "^1.0",
-        "php-kit/ext-pdo": "^1.1"
+        "php-kit/ext-pdo": "^1.1",
+        "respect/validation": "^1.1"
     },
     "autoload": {
         "psr-4": {

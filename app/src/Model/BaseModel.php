@@ -5,6 +5,7 @@ namespace Zipofar\Model;
 use Zipofar\Database\ZPdo;
 use Zipofar\Service\QueryParams;
 use Zipofar\Service\QueryBuilder;
+use Respect\Validation\Validator as v;
 
 class BaseModel
 {
@@ -14,8 +15,9 @@ class BaseModel
     const PER_PAGE = 5;
 
     protected $fields =  [];
-    protected $options = [
-        'max_limit' => 20,
+    private $serviceFields = [
+        'per_page',
+        'page'
     ];
 
     protected $pdo;
@@ -37,8 +39,9 @@ class BaseModel
         $this->queryParams->setOffsetField(self::OFFSET_FIELD);
     }
 
-    public function setOptions($options)
+    protected function getServiceFields()
     {
-        $this->options = array_merge($this->options, $options);
+        return $this->serviceFields;
     }
+
 }

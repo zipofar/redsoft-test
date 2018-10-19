@@ -22,10 +22,16 @@ trait ResponseBuilder
             'payload' => $response,
         ];
 
+        $emptyPayload = new \stdClass();
+
         if (empty($response)) {
-            $emptyPayload = new \stdClass();
             $newResponse['payload'] = $emptyPayload;
             $statusCode = Response::HTTP_NOT_FOUND;
+        } elseif (isset($response['errors'])) {
+            $newResponse['payload'] = $emptyPayload;
+            $newResponse['meta'] = [];
+            $newResponse['errors'] = $response['errors'];
+            $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY;
         } else {
             $statusCode = Response::HTTP_OK;
         }
