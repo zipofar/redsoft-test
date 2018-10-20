@@ -44,50 +44,140 @@
 ## API
 
 URL не должен заканчиваться символом слеш.
-
-Для всех случаев, когда присутствует параметр {offset}, стандартное значение {offset} = 0, является опциональным.
-
-* Выдача товара по ID
+GET запросы возвращают ответы JSON и имеют структуру
 ```
-/api/id/{id_product}
+{"meta":{"number_of_records":1},"payload":{"id":"1","name":"Updated Section"}}
 ```
 
-* Выдача товаров по вхождению подстроки в названии.
+В случае ошибки
 ```
-/api/product_name/{name}/{offset}
-```
-
-* Выдача товаров по производителю/производителям
-```
-/api/brand/{name}/{offset}
-/api/brand/{name1+name2+name3}/{offset}
+{"meta":[],"payload":{},"errors":[]}
 ```
 
-* Выдача товаров по разделу (только раздел)
+* Товар по ID
 ```
-/api/section/{name}/{offset}
-```
-
-* Выдача товаров по разделу и вложенным разделам
-
-Начинать запрос нужно с корневого узла, разделяя нижележащие узлы символами '>>'
-
-```
-/api/sections/{root>>node>>node>>leaf}/{offset}
+/api/products/{id}
 ```
 
-* Получить всю иерархию разделов (json)
-
+* Фильтр товаров по полям (name, brand, price, availability)
 ```
-/api/hierarchy
-```
-
-* Получить всю иерархию разделов в виде html списка (добавить /1)
-
-```
-/api/hierarchy/1
+/api/products?name=Name&brand=Brand&price=1.50&availability=1
+/api/products?page=1&per_page=3
 ```
 
+* Постраничный вывод товаров. По дефолту выводится страница 1, по 5 записей 
+```
+/api/products?page=1&per_page=3
+```
+
+* Фильтр по полю name может использовать часть имени
+```
+/api/products?name=beginWith%
+/api/products?name=%endOn
+/api/products?name=%inMiddle%
+```
+
+* Фильтр по полю brand (производитель) можно указать несколько производителей
+```
+/api/products?brand=Brand1|Brand2|Brand3
+```
+
+* Создать товар POST запрос
+```
+/api/products
+```
+с телом JSON и section_id для определения категории в которой сохранить товар
+```
+{"name":"New Product","availability":"1","price":"5.50","brand":"SomeBrand","section_id":"15"}
+```
+вернет ответ
+```
+Response code 201 and header Location:/api/products/{id}
+```
+
+* Обновить товар PUT запрос
+```
+/api/products/{id}
+```
+с телом JSON
+```
+{"name":"New Product","availability":"1","price":"5.50","brand":"SomeBrand"}
+```
+вернет ответ
+```
+Response code 201 and header Location:/api/products/{id}
+```
+
+* Удалить товар DELETE запрос
+```
+/api/products/{id}
+```
+вернет ответ
+```
+Response code 204
+```
+
+
+* Категория по ID
+```
+/api/sections/{id}
+```
+
+* Получить все категории в виде JSON Tree
+```
+/api/sections
+```
+
+* Получить все категории в виде HTML List Tree
+```
+/api/sections?pretty
+```
+
+* Получить все товары в категории по ID категории. К продуктам можно применить фильтр
+```
+/api/sections/{id}/products
+/api/sections/{id}/products?brand=Brand&name=SomeName
+```
+
+* Получить все товары в категории и всех подкатегориях с помощью ID категории.
+```
+/api/sections/{id}/sub/products?brand=Brand&price=20.0&name=SomeName
+```
+
+* Создать категорию POST запрос
+```
+/api/sections
+```
+с телом JSON и parent_id для определения родительской категории 
+```
+{"name":"New Section","parent_id":"10"}
+```
+вернет ответ
+```
+Response code 201 and header Location:/api/sections/{id}
+```
+
+* Обновить товар PUT запрос
+```
+/api/sections/{id}
+```
+с телом JSON
+```
+{"name":"New Section"}
+```
+вернет ответ
+```
+Response code 201 and header Location:/api/sections/{id}
+```
+
+* Удалить товар DELETE запрос
+```
+/api/sections/{id}
+```
+вернет ответ
+```
+Response code 204
+```
 ## Requirements
 
 * Mac / Linux
@@ -98,12 +188,12 @@ URL не должен заканчиваться символом слеш.
 
 Clone repo
 
-```bash
+```
 $ git clone https://github.com/zipofar/redsoft-test.git
 ```
 [Install ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
-```bash
+```
 $ cd redsoft-test
 $ make ansible-development-setup
 $ make run-dev
@@ -120,18 +210,18 @@ Open <http://localhost:4000>
 Так же в dev окружении настроен Xdebug на порту 9001
 ## Run
 
-```bash
+```
 $ make run-dev
 ```
 
 Open <http://localhost:4000>
 
 ## Test
-If did not run app, first "make run-dev"
+Для запуска тестов, необходимо запустить проект
 ```
 $ make run-dev
 ```
-run test
-```bash
-$ make test
+Запустить все тесты
+```
+$ make test-all
 ```
