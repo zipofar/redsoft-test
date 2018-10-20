@@ -1,9 +1,6 @@
 migrate:
 	php artisan.php make:migration
 
-migrate-test:
-	php artisan.php make:migration testdb
-
 seeder:
 	php artisan.php make:seeder
 

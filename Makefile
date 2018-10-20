@@ -21,6 +21,12 @@ test-behat:
 
 test-all: test-unit test-behat
 
+migrate:
+	docker-compose -f docker-compose_dev.yml exec php make migrate
+
+seeder:
+	docker-compose -f docker-compose_dev.yml exec php make seeder
+
 ansible-development-setup:
 	mkdir -p tmp
 	echo 'password' > tmp/ansible-vault-password
