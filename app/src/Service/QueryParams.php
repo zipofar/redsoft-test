@@ -5,53 +5,26 @@ namespace Zipofar\Service;
 
 class QueryParams
 {
-    private $fields = [];
-    private $queryParams = [];
-    private $limitField;
-    private $offsetField;
-    private $preparedParams;
+    private $preparedParams = [];
+    private $unusedParams = [];
 
-    public function addFields(array $fields)
+    public function setUnusedParams(array $params)
     {
-        $this->fields = array_merge($this->fields, $fields);
+        $this->unusedParams = array_merge($this->unusedParams, $params);
     }
 
     public function addRequestParams(array $params)
     {
-        $this->queryParams = array_merge($this->queryParams, $params);
-        $this->preparedParams = $this->prepareParams($this->queryParams, $this->fields);
-    }
-
-    public function setLimitField($limitField)
-    {
-        $this->limitField = $limitField;
-    }
-
-    public function setOffsetField($offsetField)
-    {
-        $this->offsetField = $offsetField;
-    }
-
-    public function getOffset()
-    {
-        $offset = (int) $this->preparedParams[$this->offsetField];
-        $limit = $this->getLimit();
-        $calcOffset = $limit * $offset - $limit;
-        return $calcOffset;
-    }
-
-    public function getLimit()
-    {
-        $limit = (int) $this->preparedParams[$this->limitField];
-        return $limit;
+        $filtered = $this->filterUnusedParams($params);
+        $parsed = $this->parseParams($filtered);
+        $this->preparedParams = array_merge($this->preparedParams, $parsed);
     }
 
     public function getStringWhere()
     {
-        $params = $this->getWhereParams();
         $stringWhere = [];
 
-        foreach ($params as $key => $param) {
+        foreach ($this->preparedParams as $key => $param) {
             if (is_array($param)) {
                 $stringWhere[] = $this->buildINClause($key, $param);
             } elseif (stripos($param, '%') !== false) {
@@ -67,10 +40,9 @@ class QueryParams
 
     public function getArrayWhere()
     {
-        $params = $this->getWhereParams();
         $arrayWhere = [];
 
-        foreach ($params as $key => $param) {
+        foreach ($this->preparedParams as $key => $param) {
             if (is_array($param)) {
                 $arrayWhere = array_merge($arrayWhere, $param);
             } else {
@@ -81,32 +53,12 @@ class QueryParams
         return $arrayWhere;
     }
 
-    private function prepareParams($params, $defParams)
+    private function filterUnusedParams($params)
     {
-        $filteredUndefinedParams = array_filter($params, function ($key) use ($defParams) {
-            return isset($defParams[$key]);
-        }, ARRAY_FILTER_USE_KEY);
-        $compiledParams = array_merge($defParams, $filteredUndefinedParams);
-
-        $filteredEmptyParams = array_filter($compiledParams, function ($item) {
-            return $item !== '';
-        });
-
-        $params = $this->parseParams($filteredEmptyParams);
-
-        return $params;
-    }
-
-    private function getWhereParams()
-    {
-        $filteredLimitOffsetFields = array_filter($this->preparedParams, function ($item) {
-            if ($item === $this->limitField || $item === $this->offsetField) {
-                return false;
-            }
-            return true;
+        return array_filter($params, function ($item) {
+            return !in_array($item, $this->unusedParams);
         }, ARRAY_FILTER_USE_KEY);
 
-        return $filteredLimitOffsetFields;
     }
 
     private function buildINClause($fieldName, array $params)
@@ -144,11 +96,11 @@ class QueryParams
 
     private function makeArrayParamsFromString($key, $value)
     {
-        $arrValues = explode('|', $value);
+        $values = explode('|', $value);
         $i = 0;
         $res = [];
 
-        foreach ($arrValues as $value) {
+        foreach ($values as $value) {
             $res[$key.$i] = $value;
             $i += 1;
         }

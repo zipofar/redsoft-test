@@ -162,3 +162,12 @@ Feature: Product
     Then the "Location" response header is "/api/products/1"
     When I request "/api/products/1"
     Then the response code is 200
+
+  Scenario: Getting Error when get product by invalid id
+    Given the "Accept" request header is "application/json"
+    When I request "/api/products/1a"
+    Then the response code is 422
+    Then the response body is:
+      """
+      {"meta":[],"payload":{},"errors":["\"1a\" must be a finite number","\"1a\" must be an integer number"]}
+      """

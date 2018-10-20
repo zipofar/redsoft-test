@@ -2,17 +2,31 @@
 
 namespace Zipofar\Model;
 
+use Respect\Validation\Validator as v;
+
 class MSection extends BaseModel
 {
     protected $fields =  [
-        'id' => '',
-        'name' => '',
-        'lft' => '',
-        'rgt' => '',
+        'id',
+        'name',
     ];
+
+    protected function validationRules()
+    {
+        return [
+            'id' => v::finite()->positive()->intVal(),
+            'name' => v::alnum(),
+        ];
+    }
 
     public function getById($id)
     {
+        $errors = $this->validate(['id' => $id]);
+
+        if (sizeof($errors) > 0) {
+            return ['errors' => $errors];
+        }
+
         $this->queryParams->addRequestParams(['id' => $id]);
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();

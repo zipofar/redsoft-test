@@ -81,8 +81,17 @@ Feature: Section
       """
       {"meta":{"number_of_records":1},"payload":[{"id":"1","name":"Food","level":"0","children":{"1":{"id":"2","name":"Vegetable","level":"1","children":{"2":{"id":"3","name":"Red","level":"2","children":{"3":{"id":"4","name":"Sour","level":"3"},"4":{"id":"5","name":"Sweet","level":"3"}}},"5":{"id":"6","name":"Green","level":"2","children":{"6":{"id":"7","name":"Sour","level":"3"},"7":{"id":"8","name":"Sweet","level":"3"}}}}}}}]}
       """
-    When I request "/api/products?page1&per_page=10"
+    When I request "/api/products?page=1&per_page=10"
     Then the response body is:
       """
       {"meta":{"number_of_records":5},"payload":[{"id":"1","name":"FoodVegRedSour","availability":"1","price":"1.99","brand":"Russia Kolhoz"},{"id":"2","name":"FoodVegRedSweet","availability":"1","price":"1.50","brand":"Gruzin"},{"id":"3","name":"FoodVegGreenSour","availability":"1","price":"1.50","brand":"Russia Kolhoz"},{"id":"4","name":"FoodVegGreenSweet","availability":"1","price":"1.50","brand":"Country"},{"id":"9","name":"FoodVegRedSour2","availability":"1","price":"1.99","brand":"Russia Kolhoz"}]}
+      """
+
+  Scenario: Getting Error when get section by invalid id
+    Given the "Accept" request header is "application/json"
+    When I request "/api/sections/1a"
+    Then the response code is 422
+    Then the response body is:
+      """
+      {"meta":[],"payload":{},"errors":["\"1a\" must be a finite number","\"1a\" must be an integer number"]}
       """

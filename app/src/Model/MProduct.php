@@ -3,19 +3,10 @@
 namespace Zipofar\Model;
 
 use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 class MProduct extends BaseModel
 {
     protected $fields =  [
-        'id' => '',
-        'name' => '',
-        'availability' => '',
-        'price' => '',
-        'brand' => '',
-    ];
-
-    protected $_fields =  [
         'id',
         'name',
         'availability',
@@ -23,50 +14,17 @@ class MProduct extends BaseModel
         'brand',
     ];
 
-    public function validate(array $params)
+    protected function validationRules()
     {
-        $errors = [];
-
-        $undefinedFields = $this->getUndefinedFields($params);
-        if (sizeof($undefinedFields) > 0) {
-            $errors['undefined'] = array_keys($undefinedFields);
-            return $errors;
-        }
-
-        $rules = $this->getRules();
-        foreach ($params as $key => $param) {
-            try {
-                $rules[$key]->assert($param);
-            } catch(NestedValidationException $exception) {
-                return $errors = $exception->getMessages();
-            }
-        }
-
-        return $errors;
-    }
-
-    public function getUndefinedFields($params)
-    {
-        $definedFields = array_merge($this->_fields, $this->getServiceFields());
-        $undefinedFields = array_filter($params, function ($key) use ($definedFields) {
-            return !in_array($key, $definedFields);
-        }, ARRAY_FILTER_USE_KEY);
-        return $undefinedFields;
-    }
-
-    public function getRules()
-    {
-        $rules = [
-            'id' => v::finite()->positive(),
-            'name' => v::alnum(),
-            'availability' => v::between(0, 1),
+        return [
+            'id' => v::finite()->positive()->intVal(),
+            'name' => v::alnum('% |'),
+            'availability' => v::between(0, 1)->intVal(),
             'price' => v::numeric(),
-            'brand' => v::alnum(),
-            'page' => v::finite()->positive(),
-            'per_page' => v::between(0, 20),
+            'brand' => v::alnum('% |'),
+            'page' => v::finite()->positive()->intVal(),
+            'per_page' => v::between(0, 20)->intVal(),
         ];
-
-        return $rules;
     }
 
     public function getById($id)
@@ -104,8 +62,6 @@ class MProduct extends BaseModel
 
         $this->queryParams->addRequestParams($params);
 
-        $offset = $this->queryParams->getOffset();
-        $limit = $this->queryParams->getLimit();
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 
@@ -117,7 +73,7 @@ class MProduct extends BaseModel
             $sql->where($stringWhere);
         }
 
-        $sql = $sql->limit($limit, $offset)->build();
+        $sql = $sql->limit($this->getLimit($params), $this->getOffset($params))->build();
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($arrayWhere);
         $res = $stmt->fetchAll();
@@ -129,8 +85,6 @@ class MProduct extends BaseModel
     {
         $this->queryParams->addRequestParams($params);
 
-        $offset = $this->queryParams->getOffset();
-        $limit = $this->queryParams->getLimit();
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 
@@ -144,7 +98,7 @@ class MProduct extends BaseModel
             $sql->where($stringWhere.' AND ps.section_id = :section_id');
         }
 
-        $sql = $sql->limit($limit, $offset)->build();
+        $sql = $sql->limit($this->getLimit($params), $this->getOffset($params))->build();
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(array_merge($arrayWhere, ['section_id' => $section_id]));
         $res = $stmt->fetchAll();
@@ -155,8 +109,6 @@ class MProduct extends BaseModel
     {
         $this->queryParams->addRequestParams($params);
 
-        $offset = $this->queryParams->getOffset();
-        $limit = $this->queryParams->getLimit();
         $stringWhere = $this->queryParams->getStringWhere();
         $arrayWhere = $this->queryParams->getArrayWhere();
 
@@ -173,7 +125,7 @@ class MProduct extends BaseModel
             $sql->where($stringWhere." AND ps.section_id IN ({$sqlIdSections})");
         }
 
-        $sql = $sql->limit($limit, $offset)->build();
+        $sql = $sql->limit($this->getLimit($params), $this->getOffset($params))->build();
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(array_merge($arrayWhere, ['section_id' => $section_id]));
         $res = $stmt->fetchAll();
