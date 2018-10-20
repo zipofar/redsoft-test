@@ -14,9 +14,6 @@ class MProductTest extends TestCase
 
     public function setUp()
     {
-        $dotenv = new \Dotenv\Dotenv(__DIR__.'/..');
-        $dotenv->safeLoad();
-
         $app = new \Zipofar\App();
         $container = $app->getContainer();
         $this->product = $container->get(MProduct::class);

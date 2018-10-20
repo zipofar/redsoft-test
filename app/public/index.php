@@ -5,12 +5,6 @@ require_once "../vendor/autoload.php";
 use Zipofar\Controller\Product;
 use Zipofar\Controller\Section;
 
-$appEnv = __DIR__.'/..';
-$testEnv = __DIR__.'/../__tests__';
-$envPath = isset($_ENV['TEST_ENV']) ? $testEnv : $appEnv;
-$dotenv = new \Dotenv\Dotenv($envPath);
-$dotenv->safeLoad();
-
 $app = new Zipofar\App();
 
 $app->get('product.show', '/api/products/{id}', [Product::class, 'getById']);

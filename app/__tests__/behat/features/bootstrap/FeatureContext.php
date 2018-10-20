@@ -32,9 +32,6 @@ class FeatureContext extends ApiContext implements Context
     /** @BeforeScenario */
     public function resetDatabase()
     {
-        $dotenv = new \Dotenv\Dotenv(__DIR__.'/../../..');
-        $dotenv->safeLoad();
-
         $app = new \Zipofar\App();
         $container = $app->getContainer();
         $this->pdo = $container->get(ZPdo::class)->getPDO();

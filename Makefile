@@ -4,9 +4,6 @@ run:
 run-dev:
 	docker-compose -f docker-compose_dev.yml up -d
 
-run-test:
-	docker-compose -f docker-compose_test.yml up -d
-
 kill:
 	docker-compose kill
 
@@ -17,10 +14,10 @@ production-setup:
 	docker-compose run php make prod-setup
 
 test-unit:
-	docker-compose -f docker-compose_test.yml exec php make test-unit
+	docker-compose -f docker-compose_dev.yml exec php make test-unit
 
 test-behat:
-	docker-compose -f docker-compose_test.yml exec php make test-behat
+	docker-compose -f docker-compose_dev.yml exec php make test-behat
 
 test-all: test-unit test-behat
 
