@@ -155,7 +155,6 @@ class MProduct extends BaseModel
             $this->pdo->rollBack();
             throw new \PDOException($e->getMessage());
         }
-
     }
 
     public function deleteProduct($id)

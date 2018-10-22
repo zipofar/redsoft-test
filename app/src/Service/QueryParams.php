@@ -2,7 +2,6 @@
 
 namespace Zipofar\Service;
 
-
 class QueryParams
 {
     private $preparedParams = [];
@@ -58,7 +57,6 @@ class QueryParams
         return array_filter($params, function ($item) {
             return !in_array($item, $this->unusedParams);
         }, ARRAY_FILTER_USE_KEY);
-
     }
 
     private function buildINClause($fieldName, array $params)

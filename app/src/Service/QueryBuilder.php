@@ -8,8 +8,6 @@
 
 namespace Zipofar\Service;
 
-
-
 class QueryBuilder
 {
     protected $fields = [];

@@ -8,7 +8,6 @@
 
 namespace Zipofar\Exception;
 
-
 interface ExceptionInterface
 {
     //

@@ -21,6 +21,12 @@ test-behat:
 
 test-all: test-unit test-behat
 
+lint:
+	docker-compose -f docker-compose_dev.yml exec php make lint
+
+lint-fix:
+	docker-compose -f docker-compose_dev.yml exec php make lint-fix
+
 migrate:
 	docker-compose -f docker-compose_dev.yml exec php make migrate
 

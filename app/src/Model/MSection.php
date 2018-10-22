@@ -123,7 +123,6 @@ class MSection extends BaseModel
             $this->pdo->rollBack();
             throw new \PDOException($e->getMessage());
         }
-
     }
 
     protected function getByIdFull($id)

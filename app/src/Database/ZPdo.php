@@ -2,7 +2,6 @@
 
 namespace Zipofar\Database;
 
-
 use Psr\Container\ContainerInterface;
 
 class ZPdo

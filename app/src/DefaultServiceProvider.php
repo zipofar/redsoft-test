@@ -53,8 +53,12 @@ class DefaultServiceProvider
             ZPdo::class => function ($container) {
                 return new ZPdo($container);
             },
-            Handler\Error::class => function () { return new Handler\Error(); },
-            Handler\PhpError::class => function () { return new Handler\PhpError(); },
+            Handler\Error::class => function () {
+                return new Handler\Error();
+            },
+            Handler\PhpError::class => function () {
+                return new Handler\PhpError();
+            },
         ];
     }
 }

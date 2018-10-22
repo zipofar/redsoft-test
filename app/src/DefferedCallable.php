@@ -2,7 +2,6 @@
 
 namespace Zipofar;
 
-
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +11,7 @@ class DefferedCallable
     private $callable;
     private $container;
 
-    public function __construct(ContainerInterface $container,  $callable)
+    public function __construct(ContainerInterface $container, $callable)
     {
         $this->callable = $callable;
         $this->container = $container;

@@ -63,7 +63,7 @@ class BaseModel
         foreach ($params as $key => $param) {
             try {
                 $rules[$key]->assert($param);
-            } catch(NestedValidationException $exception) {
+            } catch (NestedValidationException $exception) {
                 return $errors = $exception->getMessages();
             }
         }

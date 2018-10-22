@@ -65,7 +65,7 @@ class Resolver
             return $fn;
         }
 
-        throw new InvalidCallbackException ('${$callback} is not a callable function');
+        throw new InvalidCallbackException('${$callback} is not a callable function');
     }
 
     /*

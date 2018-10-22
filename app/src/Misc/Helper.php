@@ -2,7 +2,6 @@
 
 namespace Zipofar\Misc;
 
-
 use Symfony\Component\HttpFoundation\Request;
 
 class Helper
@@ -25,7 +24,6 @@ class Helper
             $res = [];
 
             for ($i = $startIndex; $i <= $lastId; $i++) {
-
                 if ((int) $arr[$i]['level'] === $level) {
                     $res[$i] = $arr[$i];
                 } elseif ($arr[$i]['level'] < $level) {

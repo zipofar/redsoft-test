@@ -28,5 +28,5 @@ update-autoload:
 lint:
 	composer phpcs
 
-lint-autofix:
+lint-fix:
 	composer phpcbf
