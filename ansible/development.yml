@@ -5,12 +5,17 @@
     - name: Make env for Docker
       template:
         src: templates/env_docker.j2 
-        dest: '../.env' 
+        dest: '../.env'
 
     - name: Make env for App
       template:
         src: templates/env_app.j2
         dest: '../app/.env'
+
+    - name: Make deploy file like a deployHdkh46kd.php
+      template:
+        src: templates/deploy.php.j2
+        dest: '../app/public/deploy{{ 99999999999999994 | random | to_uuid }}.php'
 
     - name: Make dir
       file:
