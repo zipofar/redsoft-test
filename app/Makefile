@@ -30,3 +30,6 @@ lint:
 
 lint-fix:
 	composer phpcbf
+
+deploy:
+	git pull && make dev-vendor
