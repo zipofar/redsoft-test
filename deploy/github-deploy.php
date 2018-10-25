@@ -49,7 +49,6 @@ try {
 
 } catch (\Exception $e) {
 
-
     logToFile($e->getMessage(), $pathLogFile);
 
 }
