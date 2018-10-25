@@ -2,11 +2,15 @@
 
 require_once "../vendor/autoload.php";
 
+use Symfony\Component\HttpFoundation\Response;
 use Zipofar\Controller\Product;
 use Zipofar\Controller\Section;
 
 $app = new Zipofar\App();
 
+$app->get('index.show', '/', function ($request, Response $response) {
+    return $response->setContent('{"meta":[],"payload":{"index":"This is a redsoft test project"}}');
+});
 $app->get('product.show', '/api/products/{id}', [Product::class, 'getById']);
 $app->get('products.show', '/api/products', [Product::class, 'showProducts']);
 $app->get('productsInSection.show', '/api/sections/{id}/products', [Product::class, 'showProductsInSection']);
