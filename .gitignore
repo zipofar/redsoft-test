@@ -8,4 +8,4 @@ vendor/
 app/log/
 /mysql/
 images/php_dev/docker-php-ext-xdebug.ini
-app/public/deploy*.php
+deploy/deploy*.php
