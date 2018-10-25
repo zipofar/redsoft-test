@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__."../app/vendor/autoload.php";
+require_once __DIR__."/../app/vendor/autoload.php";
 
 $dotenv = new \Dotenv\Dotenv(__DIR__.'/../');
 $dotenv->safeLoad();
@@ -32,6 +32,8 @@ function logToFile($content, $file)
     file_put_contents($file, "[{$time}]:".$content.PHP_EOL, FILE_APPEND);
 }
 
+$pathLogFile = __DIR__."/deploy.log";
+
 try {
 
     $githubSecret = getArrayValue($_ENV, 'GITHUB_SECRET');
@@ -43,10 +45,10 @@ try {
     }
 
     $resDeploy = runDeploy();
-    logToFile($resDeploy, __DIR__.'/storage/logs/deploy.log');
+    logToFile($resDeploy, $pathLogFile);
 
 } catch (\Exception $e) {
 
-    logToFile($e->getMessage(), __DIR__.'/storage/logs/deploy.log');
+    logToFile($e->getMessage(), $pathLogFile);
 
 }
