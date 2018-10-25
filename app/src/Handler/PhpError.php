@@ -33,15 +33,16 @@ class PhpError extends AbstractError
      */
     public function __invoke(Request $request, Response $response, \Throwable $error)
     {
-        $contentType = $request->getRequestFormat();
+        $contentType = $this->determineContentType($request);
         switch ($contentType) {
-            case 'json':
+            case 'application/json':
                 $output = $this->renderJsonErrorMessage($error);
                 break;
-            case 'xml':
+            case 'text/xml':
+            case 'application/xml':
                 $output = $this->renderXmlErrorMessage($error);
                 break;
-            case 'html':
+            case 'text/html':
                 $output = $this->renderHtmlErrorMessage($error);
                 break;
             default:

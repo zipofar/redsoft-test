@@ -25,7 +25,8 @@ abstract class AbstractError extends AbstractHandler
      */
     public function __construct($displayErrorDetails = false)
     {
-        $this->displayErrorDetails = (bool) $displayErrorDetails;
+        $isDebug = $_ENV['APP_DEBUG'] ?? '';
+        $this->displayErrorDetails = $isDebug === 'true' ? true : (bool) $displayErrorDetails;
     }
 
     /**
