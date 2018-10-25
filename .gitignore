@@ -9,4 +9,3 @@ app/log/
 /mysql/
 images/php_dev/docker-php-ext-xdebug.ini
 /deploy/deploy*.php
-/deploy/deploy.log

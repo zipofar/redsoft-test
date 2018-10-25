@@ -32,7 +32,7 @@ function logToFile($content, $file)
     file_put_contents($file, "[{$time}]:".$content.PHP_EOL, FILE_APPEND);
 }
 
-$pathLogFile = __DIR__."/deploy.log";
+$pathLogFile = __DIR__."/log/deploy.log";
 
 try {
 
