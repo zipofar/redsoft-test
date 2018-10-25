@@ -35,11 +35,11 @@ function logToFile($content, $file)
 $pathLogFile = __DIR__."/log/deploy.log";
 
 try {
-
+/*
     $githubSecret = getArrayValue($_ENV, 'GITHUB_SECRET');
     $githubSignature = getArrayValue($_SERVER, 'HTTP_X_HUB_SIGNATURE');
     $body = file_get_contents('php://input');
-/*    
+    
     if (!githubKeyIsOK($githubSecret, $githubSignature, $body)) {
         throw new \Exception ("Github key is not valid");
     }
