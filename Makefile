@@ -57,3 +57,8 @@ build-dev:
 
 build-prod:
 	docker-compose build
+
+git-pull:
+	git pull origin master
+
+deploy: git-pull production-setup

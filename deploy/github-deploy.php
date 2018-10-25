@@ -1,8 +1,8 @@
 <?php
 
-require_once "vendor/autoload.php";
+require_once __DIR__."../app/vendor/autoload.php";
 
-$dotenv = new \Dotenv\Dotenv(__DIR__);
+$dotenv = new \Dotenv\Dotenv(__DIR__.'/../');
 $dotenv->safeLoad();
 
 function getArrayValue (array $arr, $key)
@@ -22,7 +22,7 @@ function githubKeyIsOK ($githubSecret, $githubSignature, $body)
 
 function runDeploy()
 {
-  $dir = __DIR__;
+  $dir = __DIR__.'/../';
   return shell_exec("cd {$dir} && make deploy");
 }
 

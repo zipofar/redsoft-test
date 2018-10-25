@@ -15,7 +15,7 @@
     - name: Make deploy file like a deployHdkh46kd.php
       template:
         src: templates/deploy.php.j2
-        dest: '../app/public/deploy{{ 99999999999999994 | random | to_uuid }}.php'
+        dest: '../deploy/deploy{{ 99999999999999994 | random | to_uuid }}.php'
 
     - name: Make dir
       file:

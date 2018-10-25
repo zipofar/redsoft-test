@@ -18,7 +18,7 @@ dev-vendor:
 prod-vendor:
 	composer install --no-dev
 
-dev-setup: dev-vendor migrate migrate-test seeder
+dev-setup: dev-vendor migrate seeder
 
 prod-setup: prod-vendor migrate seeder
 
@@ -30,7 +30,3 @@ lint:
 
 lint-fix:
 	composer phpcbf
-
-
-deploy:
-	git pull && make dev-vendor
