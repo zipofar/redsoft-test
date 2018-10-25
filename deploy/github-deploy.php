@@ -23,7 +23,7 @@ function githubKeyIsOK ($githubSecret, $githubSignature, $body)
 function runDeploy()
 {
   $dir = __DIR__.'/../';
-  return shell_exec("cd {$dir} && make deploy");
+  return shell_exec("cd {$dir} && make deploy1");
 }
 
 function logToFile($content, $file)

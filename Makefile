@@ -61,4 +61,4 @@ build-prod:
 git-pull:
 	git pull origin master
 
-deploy: git-pull production-setup
+deploy1: git-pull
