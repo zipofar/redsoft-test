@@ -62,3 +62,6 @@ build-prod:
 
 run-deploy:
 	ansible-playbook ansible/deploy.yml -i ansible/production -u $U -vv
+
+push:
+	git push origin master
