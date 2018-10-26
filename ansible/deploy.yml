@@ -9,12 +9,17 @@
         update: yes
         version: master
 
-    - name: Run makefile ansible-production-setup
-      make:
-        chdir: /home/ingprog/apps/redsoft-test
-        target: ansible-production-setup
-
     - name: Run makefile production-setup
       make:
         chdir: /home/ingprog/apps/redsoft-test
         target: production-setup
+
+    - name: Make env for Docker
+      template:
+        src: templates/env_docker.j2
+        dest: '../.env'
+
+    - name: Make env for App
+      template:
+        src: templates/env_app.j2
+        dest: '../app/.env'
