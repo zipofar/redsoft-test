@@ -2,6 +2,8 @@
 
 namespace Zipofar;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Routing\RequestContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -10,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 use Psr\Container\ContainerInterface;
 use Zipofar\Database\ZPdo;
-use Zipofar\Misc\Helper;
+use Monolog\Handler\SlackWebhookHandler;
 
 class DefaultServiceProvider
 {
@@ -39,9 +41,16 @@ class DefaultServiceProvider
             },
             LoggerInterface::class => function ($container) {
                 $settings = $container->get('settings')['logger'];
-                $logger = new \Monolog\Logger($settings['name']);
+                $slack = new SlackWebhookHandler(
+                    $settings['slack_webhook'],
+                    $settings['slack_channel']
+                );
+                $stream = new StreamHandler($settings['path'], $settings['level']);
+                $logger = new Logger($settings['name']);
+
                 $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
-                $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+                $logger->pushHandler($stream);
+                $logger->pushHandler($slack);
 
                 $handler = new \Monolog\ErrorHandler($logger);
                 $handler->registerErrorHandler([], false);

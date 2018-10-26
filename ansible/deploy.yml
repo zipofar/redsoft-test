@@ -9,6 +9,11 @@
         update: yes
         version: master
 
+    - name: Run makefile ansible-production-setup
+      make:
+        chdir: /home/ingprog/apps/redsoft-test
+        target: ansible-production-setup
+
     - name: Run makefile production-setup
       make:
         chdir: /home/ingprog/apps/redsoft-test

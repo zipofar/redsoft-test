@@ -37,13 +37,13 @@ seeder:
 
 ansible-development-setup:
 	mkdir -p tmp
-	echo 'password' > tmp/ansible-vault-password
-	ansible-playbook ansible/development.yml -i ansible/development -vv -K
+	echo '' >> tmp/ansible-vault-password
+	ansible-playbook ansible/development.yml -i ansible/development -vv
 
 ansible-production-setup:
 	mkdir -p tmp
 	echo '' >> tmp/ansible-vault-password
-	ansible-playbook ansible/production.yml -i ansible/production -vv -K
+	ansible-playbook ansible/production.yml -i ansible/production -vv
 
 ansible-vaults-encrypt:
 	ansible-vault encrypt ansible/production/group_vars/all/vault.yml

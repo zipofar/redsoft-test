@@ -100,14 +100,17 @@ class App
     {
         $request = $this->container->get(Request::class);
         $response = $this->container->get(Response::class);
+        $logger = $this->container->get(\Psr\Log\LoggerInterface::class);
 
         try {
             ob_start();
             $response = $this->callMiddlewareStack($request, $response);
         } catch (\Exception $e) {
             $response = $this->handleException($e, $request, $response);
+            $logger->critical($e->getMessage());
         } catch (\Throwable $e) {
             $response = $this->handlePhpError($e, $request, $response);
+            $logger->critical($e->getMessage());
         } finally {
             $output = ob_get_clean();
         }
