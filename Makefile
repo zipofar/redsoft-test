@@ -62,3 +62,6 @@ git-pull:
 	git pull origin master
 
 deploy1: git-pull
+
+run-deploy-playbook:
+	ansible-playbook ansible/deploy.yml -i ansible/production -vv -K
