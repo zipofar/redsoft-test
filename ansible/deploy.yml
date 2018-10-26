@@ -9,17 +9,17 @@
         update: yes
         version: master
 
-    - name: Run makefile production-setup
-      make:
-        chdir: /home/ingprog/apps/redsoft-test
-        target: production-setup
-
     - name: Make env for Docker
       template:
         src: templates/env_docker.j2
-        dest: '../.env'
+        dest: /home/ingprog/apps/redsoft-test/.env
 
     - name: Make env for App
       template:
         src: templates/env_app.j2
-        dest: '../app/.env'
+        dest: /home/ingprog/apps/redsoft-test/app/.env
+
+    - name: Run makefile production-setup
+      make:
+        chdir: /home/ingprog/apps/redsoft-test
+        target: production-setup
