@@ -1,3 +1,5 @@
+U := ingprog
+
 run:
 	docker-compose up -d
 
@@ -58,10 +60,5 @@ build-dev:
 build-prod:
 	docker-compose build
 
-git-pull:
-	git pull origin master
-
-deploy1: git-pull
-
-run-deploy-playbook:
-	ansible-playbook ansible/deploy.yml -i ansible/production -vv -K
+deploy:
+	ansible-playbook ansible/deploy.yml -i ansible/production -u $U -vv

@@ -12,11 +12,6 @@
         src: templates/env_app.j2
         dest: '../app/.env'
 
-    - name: Make deploy file like a deployHdkh46kd.php
-      template:
-        src: templates/deploy.php.j2
-        dest: '../deploy/deploy{{ vault_deploy_key }}.php'
-
     - name: Make dir
       file:
         path: ../mysql/docker-entrypoint-initdb.d

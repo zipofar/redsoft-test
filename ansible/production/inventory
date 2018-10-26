@@ -1,1 +1,5 @@
+[local]
 localhost ansible_connection=local
+
+[webservers]
+89.223.25.108
