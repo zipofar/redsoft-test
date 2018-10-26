@@ -16,13 +16,15 @@
       file:
         path: ../mysql/docker-entrypoint-initdb.d
         state: directory
-        mode: 0755
+        mode: 0775
+      become: yes
 
     - name: Make dir
       file:
         path: ../mysql/db
         state: directory
-        mode: 0755
+        mode: 0775
+      become: yes
 
     - name: Make dir
       file:
