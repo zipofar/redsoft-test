@@ -60,5 +60,5 @@ build-dev:
 build-prod:
 	docker-compose build
 
-deploy:
+run-deploy:
 	ansible-playbook ansible/deploy.yml -i ansible/production -u $U -vv
